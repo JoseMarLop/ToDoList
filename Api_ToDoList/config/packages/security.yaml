@@ -1,0 +1,56 @@
+security:
+    # Password hashing configuration
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # User providers (we are using Doctrine here, but you can modify it based on your app's setup)
+    providers:
+        # Load users from the database
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email  # or any unique property (e.g., username)
+  
+
+    # Firewalls
+    firewalls:
+        # Login route
+        # login:
+        #     pattern: ^/api/login$
+        #     stateless: true
+        #     json_login:
+        #         check_path: /api/login
+        #         success_handler: lexik_jwt_authentication.handler.authentication_success
+        #         failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        # # Unauthenticated API routes
+        # api:
+        #     pattern: ^/api/
+        #     stateless: true  # stateless means no sessions (JWT authentication)
+        #     jwt: ~  # enable JWT authentication
+
+        # Dev firewall (optional, not relevant for production)
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        # Main firewall for other pages (optional, you may want to keep this for web routes)
+        main:
+            lazy: true
+            provider: app_user_provider
+            json_login:
+                check_path: app_login
+                username_path: email
+                password_path: password
+            jwt: ~
+            logout:
+                path: app_logout
+
+    # Access control: restrict access to specific paths
+    access_control:
+        # Allow access to login and register routes
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/register, roles: PUBLIC_ACCESS }
+
+        # Secure the rest of the API routes with ROLE_USER or ROLE_ADMIN
+        - { path: ^/api/, roles: ROLE_USER }
+        - { path: ^/admin/, roles: ROLE_ADMIN }

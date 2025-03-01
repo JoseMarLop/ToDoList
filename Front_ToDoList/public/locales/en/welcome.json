@@ -1,0 +1,26 @@
+{
+    "welcomeTitle": "Organize, prioritize and conquer",
+    "welcomeSubtitle": "Visualize your progress, optimize your workflow, and make every task count",
+    
+    "featureCardsTitle": "Workflows for your projects",
+
+    "proyectManagement": "Project Management",
+    "proyectManagementDescription": "Effortlessly manage your projects with our intuitive Kanban board. Stay organized, track progress in real time, and improve collaboration across your team.",
+
+    "meetings": "Meetings",
+    "meetingsDescription": "Enhance your meetings by keeping structured agendas, tracking key takeaways, and ensuring effective follow-ups to maximize productivity.",
+
+    "taskManagement": "Task Management",
+    "taskManagementDescription": "Break down complex tasks into smaller, manageable subtasks. Assign responsibilities, set deadlines, and monitor progress seamlessly.",
+
+    "integration": "Integration",
+    "integrationDescription": "Seamlessly integrate your team members into projects, enabling effortless collaboration, idea sharing, and real-time feedback for improved efficiency.",
+
+    "hoverGalleryCardTitle1": "Boards",
+    "hoverGalleryCardTitle2": "Management",
+    "hoverGalleryCardTitle3": "Planning",
+
+    "hoverGalleryCardDescription1": "ToDoList boards keep tasks organized and help work move forward. You can see everything at a glance, from pending tasks to those already completed.",
+    "hoverGalleryCardDescription2": "Your to-do list will be manageable to keep track of everything, from what’s finished to what still needs to be done.",
+    "hoverGalleryCardDescription3": "Plan your tasks and projects efficiently by setting priorities and deadlines to achieve your goals."
+}

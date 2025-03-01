@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,6 +33,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Table>
+     */
+    #[ORM\OneToMany(targetEntity: Table::class, mappedBy: 'owner_id', orphanRemoval: true)]
+    private Collection $tables;
+
+    /**
+     * @var Collection<int, Task>
+     */
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'assignee')]
+    private Collection $assigned_tasks;
+
+    /**
+     * @var Collection<int, Table>
+     */
+    #[ORM\ManyToMany(targetEntity: Table::class, mappedBy: 'members')]
+    private Collection $member_tables;
+
+    public function __construct()
+    {
+        $this->tables = new ArrayCollection();
+        $this->assigned_tasks = new ArrayCollection();
+        $this->member_tables = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,5 +132,92 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Table>
+     */
+    public function getTables(): Collection
+    {
+        return $this->tables;
+    }
+
+    public function addTable(Table $table): static
+    {
+        if (!$this->tables->contains($table)) {
+            $this->tables->add($table);
+            $table->setOwnerId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTable(Table $table): static
+    {
+        if ($this->tables->removeElement($table)) {
+            // set the owning side to null (unless already changed)
+            if ($table->getOwnerId() === $this) {
+                $table->setOwnerId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getAssignedTasks(): Collection
+    {
+        return $this->assigned_tasks;
+    }
+
+    public function addAssignedTask(Task $assignedTask): static
+    {
+        if (!$this->assigned_tasks->contains($assignedTask)) {
+            $this->assigned_tasks->add($assignedTask);
+            $assignedTask->setAssignee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignedTask(Task $assignedTask): static
+    {
+        if ($this->assigned_tasks->removeElement($assignedTask)) {
+            // set the owning side to null (unless already changed)
+            if ($assignedTask->getAssignee() === $this) {
+                $assignedTask->setAssignee(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Table>
+     */
+    public function getMemberTables(): Collection
+    {
+        return $this->member_tables;
+    }
+
+    public function addMemberTable(Table $memberTable): static
+    {
+        if (!$this->member_tables->contains($memberTable)) {
+            $this->member_tables->add($memberTable);
+            $memberTable->addMember($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemberTable(Table $memberTable): static
+    {
+        if ($this->member_tables->removeElement($memberTable)) {
+            $memberTable->removeMember($this);
+        }
+
+        return $this;
     }
 }

@@ -1,0 +1,25 @@
+.feature_card{
+    max-width: 300px;
+    height: 14rem;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);    transition: transform 0.2s, box-shadow 0.2s;
+    border-radius: 15px;
+    cursor: pointer;
+
+    &:hover{
+        transform: translateY(-5px);
+        box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.25);    
+    }
+
+    .feature_card_color_bar{
+        height: 20px;
+        border-radius: 15px 15px 0px 0px;
+    }
+
+    .feature_card_textbox{
+        padding: 20px;
+
+        h4{
+            font-weight: bold;
+        }
+    }
+}

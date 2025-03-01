@@ -1,0 +1,26 @@
+{
+    "welcomeTitle": "Organiza, prioriza y conquista",
+    "welcomeSubtitle": "Visualiza tu progreso, optimiza tu flujo de trabajo y haz que cada tarea cuente",
+
+    "featureCardsTitle": "Workflows for your projects",
+
+    "proyectManagement": "Gestión de Proyectos",
+    "proyectManagementDescription": "Gestiona tus proyectos de manera eficiente con nuestro intuitivo tablero Kanban. Mantente organizado, realiza un seguimiento y mejora la colaboración.",
+
+    "meetings": "Reuniones",
+    "meetingsDescription": "Optimiza tus reuniones manteniendo agendas estructuradas, rastreando puntos clave y asegurando seguimientos efectivos para maximizar la productividad.",
+
+    "taskManagement": "Gestión de Tareas",
+    "taskManagementDescription": "Divide tareas complejas en subtareas más pequeñas y manejables. Asigna responsabilidades, establece plazos y supervisa el progreso sin esfuerzo.",
+
+    "integration": "Integración",
+    "integrationDescription": "Integra a los miembros de tu equipo en los proyectos de manera fluida, permitiendo una colaboración sin esfuerzo, intercambio de ideas y mejorando la eficiencia.",
+
+    "hoverGalleryCardTitle1": "Tableros",
+    "hoverGalleryCardTitle2": "Gestión",
+    "hoverGalleryCardTitle3": "Planificación",
+
+    "hoverGalleryCardDescription1": "Los tableros de ToDoList mantienen las tareas organizadas y ayudan a que el trabajo avance. Podrás verlo todo de un solo vistazo, desde las cosas pendientes hasta las que ya están terminadas.",
+    "hoverGalleryCardDescription2": "Tu lista de tareas pendientes sera manejable para mantenerte al tanto de todo, de lo acabado como lo que queda por hacer",
+    "hoverGalleryCardDescription3": "Planifica tus tareas y proyectos de manera eficiente, estableciendo prioridades y fechas límite para cumplir con tus objetivos."
+}

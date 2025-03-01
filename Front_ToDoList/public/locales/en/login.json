@@ -1,0 +1,11 @@
+{
+  "title": "Log in",
+  "register": "Register",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "forgotPassword": "Forgot Password?",
+  "submit": "Submit",
+  "passDonotmatch": "Passwords do not match",
+  "passMinLength": "Password must be at least 5 characters long"
+}

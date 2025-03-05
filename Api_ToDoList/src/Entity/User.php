@@ -37,14 +37,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Table>
      */
-    #[ORM\OneToMany(targetEntity: Table::class, mappedBy: 'owner_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Table::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $tables;
-
-    /**
-     * @var Collection<int, Task>
-     */
-    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'assignee')]
-    private Collection $assigned_tasks;
 
     /**
      * @var Collection<int, Table>
@@ -52,11 +46,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Table::class, mappedBy: 'members')]
     private Collection $member_tables;
 
+    /**
+     * @var Collection<int, Task>
+     */
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'assignee_id')]
+    private Collection $assigned_tasks;
+
+
+
     public function __construct()
     {
         $this->tables = new ArrayCollection();
-        $this->assigned_tasks = new ArrayCollection();
         $this->member_tables = new ArrayCollection();
+        $this->assigned_tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,7 +148,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->tables->contains($table)) {
             $this->tables->add($table);
-            $table->setOwnerId($this);
+            $table->setOwner($this);
         }
 
         return $this;
@@ -156,38 +158,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->tables->removeElement($table)) {
             // set the owning side to null (unless already changed)
-            if ($table->getOwnerId() === $this) {
-                $table->setOwnerId(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Task>
-     */
-    public function getAssignedTasks(): Collection
-    {
-        return $this->assigned_tasks;
-    }
-
-    public function addAssignedTask(Task $assignedTask): static
-    {
-        if (!$this->assigned_tasks->contains($assignedTask)) {
-            $this->assigned_tasks->add($assignedTask);
-            $assignedTask->setAssignee($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAssignedTask(Task $assignedTask): static
-    {
-        if ($this->assigned_tasks->removeElement($assignedTask)) {
-            // set the owning side to null (unless already changed)
-            if ($assignedTask->getAssignee() === $this) {
-                $assignedTask->setAssignee(null);
+            if ($table->getOwner() === $this) {
+                $table->setOwner(null);
             }
         }
 
@@ -220,4 +192,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Task>
+     */
+    public function getAssignedTasks(): Collection
+    {
+        return $this->assigned_tasks;
+    }
+
+    public function addAssignedTask(Task $assignedTask): static
+    {
+        if (!$this->assigned_tasks->contains($assignedTask)) {
+            $this->assigned_tasks->add($assignedTask);
+            $assignedTask->setAssigneeId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignedTask(Task $assignedTask): static
+    {
+        if ($this->assigned_tasks->removeElement($assignedTask)) {
+            // set the owning side to null (unless already changed)
+            if ($assignedTask->getAssigneeId() === $this) {
+                $assignedTask->setAssigneeId(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

@@ -19,7 +19,7 @@ class Table
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -27,24 +27,24 @@ class Table
 
     #[ORM\ManyToOne(inversedBy: 'tables')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?user $owner_id = null;
+    private ?User $owner = null;
+
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'member_tables')]
+    private Collection $members;
 
     /**
      * @var Collection<int, Task>
      */
-    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'proyect_id', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'table_id', orphanRemoval: true)]
     private Collection $tasks;
-
-    /**
-     * @var Collection<int, user>
-     */
-    #[ORM\ManyToMany(targetEntity: user::class, inversedBy: 'member_tables')]
-    private Collection $members;
 
     public function __construct()
     {
-        $this->tasks = new ArrayCollection();
         $this->members = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,7 +69,7 @@ class Table
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -88,14 +88,38 @@ class Table
         return $this;
     }
 
-    public function getOwnerId(): ?user
+    public function getOwner(): ?User
     {
-        return $this->owner_id;
+        return $this->owner;
     }
 
-    public function setOwnerId(?user $owner_id): static
+    public function setOwner(?User $owner): static
     {
-        $this->owner_id = $owner_id;
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(User $member): static
+    {
+        if (!$this->members->contains($member)) {
+            $this->members->add($member);
+        }
+
+        return $this;
+    }
+
+    public function removeMember(User $member): static
+    {
+        $this->members->removeElement($member);
 
         return $this;
     }
@@ -112,7 +136,7 @@ class Table
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks->add($task);
-            $task->setProyectId($this);
+            $task->setTableId($this);
         }
 
         return $this;
@@ -122,34 +146,10 @@ class Table
     {
         if ($this->tasks->removeElement($task)) {
             // set the owning side to null (unless already changed)
-            if ($task->getProyectId() === $this) {
-                $task->setProyectId(null);
+            if ($task->getTableId() === $this) {
+                $task->setTableId(null);
             }
         }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, user>
-     */
-    public function getMembers(): Collection
-    {
-        return $this->members;
-    }
-
-    public function addMember(user $member): static
-    {
-        if (!$this->members->contains($member)) {
-            $this->members->add($member);
-        }
-
-        return $this;
-    }
-
-    public function removeMember(user $member): static
-    {
-        $this->members->removeElement($member);
 
         return $this;
     }

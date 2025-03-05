@@ -18,7 +18,7 @@ class Task
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
@@ -27,15 +27,18 @@ class Task
     #[ORM\Column(length: 255)]
     private ?string $priority = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $due_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?table $proyect_id = null;
+    private ?Table $table_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'assigned_tasks')]
-    private ?user $assignee = null;
+    private ?User $assignee_id = null;
 
     /**
      * @var Collection<int, Subtask>
@@ -70,7 +73,7 @@ class Task
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
@@ -101,6 +104,18 @@ class Task
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
     public function getDueAt(): ?string
     {
         return $this->due_at;
@@ -113,26 +128,26 @@ class Task
         return $this;
     }
 
-    public function getProyectId(): ?table
+    public function getTableId(): ?Table
     {
-        return $this->proyect_id;
+        return $this->table_id;
     }
 
-    public function setProyectId(?table $proyect_id): static
+    public function setTableId(?Table $table_id): static
     {
-        $this->proyect_id = $proyect_id;
+        $this->table_id = $table_id;
 
         return $this;
     }
 
-    public function getAssignee(): ?user
+    public function getAssigneeId(): ?User
     {
-        return $this->assignee;
+        return $this->assignee_id;
     }
 
-    public function setAssignee(?user $assignee): static
+    public function setAssigneeId(?User $assignee_id): static
     {
-        $this->assignee = $assignee;
+        $this->assignee_id = $assignee_id;
 
         return $this;
     }

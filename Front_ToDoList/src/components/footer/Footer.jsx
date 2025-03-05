@@ -5,7 +5,6 @@ import { cibInstagram, cibTwitter, cibFacebook } from "@coreui/icons";
 import { useTranslation } from "react-i18next";
 
 const Footer = () => {
-
   const { t } = useTranslation();
 
   return (
@@ -47,32 +46,36 @@ const Footer = () => {
         <div className={styles.footer_content}>
           <section className={styles.footer_table_section}>
             <table>
-              <tr>
-                <th>{t('footer:legalSection')}</th>
-                <th>{t('footer:helpSection')}</th>
-                <th>{t('footer:navigationSection')}</th>
-              </tr>
-              <tr>
-                <td>{t('footer:legalDescription1')}</td>
-                <td>{t('footer:helpDescription1')}</td>
-                <td>{t('footer:navigationDescription1')}</td>
-              </tr>
-              <tr>
-                <td>{t('footer:legalDescription2')}</td>
-                <td>{t('footer:helpDescription2')}</td>
-                <td>{t('footer:navigationDescription2')}</td>
-              </tr>
-              <tr>
-                <td>{t('footer:legalDescription3')}</td>
-                <td>{t('footer:helpDescription3')}</td>
-                <td>{t('footer:navigationDescription3')}</td>
-              </tr>
+              <thead>
+                <tr>
+                  <th>{t("footer:legalSection")}</th>
+                  <th>{t("footer:helpSection")}</th>
+                  <th>{t("footer:navigationSection")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{t("footer:legalDescription1")}</td>
+                  <td>{t("footer:helpDescription1")}</td>
+                  <td>{t("footer:navigationDescription1")}</td>
+                </tr>
+                <tr>
+                  <td>{t("footer:legalDescription2")}</td>
+                  <td>{t("footer:helpDescription2")}</td>
+                  <td>{t("footer:navigationDescription2")}</td>
+                </tr>
+                <tr>
+                  <td>{t("footer:legalDescription3")}</td>
+                  <td>{t("footer:helpDescription3")}</td>
+                  <td>{t("footer:navigationDescription3")}</td>
+                </tr>
+              </tbody>
             </table>
           </section>
           <div className={styles.footer_icons}>
-            <CIcon icon={cibInstagram} className={styles.icon} size="xxl"/>
-            <CIcon icon={cibTwitter} className={styles.icon} size="xxl"/>
-            <CIcon icon={cibFacebook} className={styles.icon} size="xxl"/>
+            <CIcon icon={cibInstagram} className={styles.icon} size="xxl" />
+            <CIcon icon={cibTwitter} className={styles.icon} size="xxl" />
+            <CIcon icon={cibFacebook} className={styles.icon} size="xxl" />
           </div>
         </div>
       </div>

@@ -16,15 +16,12 @@ class Subtask
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $description = null;
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'subtasks')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?task $task_id = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    private ?Task $task_id = null;
 
     public function getId(): ?int
     {
@@ -43,30 +40,6 @@ class Subtask
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getTaskId(): ?task
-    {
-        return $this->task_id;
-    }
-
-    public function setTaskId(?task $task_id): static
-    {
-        $this->task_id = $task_id;
-
-        return $this;
-    }
-
     public function getStatus(): ?string
     {
         return $this->status;
@@ -75,6 +48,18 @@ class Subtask
     public function setStatus(string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getTaskId(): ?Task
+    {
+        return $this->task_id;
+    }
+
+    public function setTaskId(?Task $task_id): static
+    {
+        $this->task_id = $task_id;
 
         return $this;
     }

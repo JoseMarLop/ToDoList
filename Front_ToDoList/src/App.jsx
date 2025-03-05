@@ -8,7 +8,7 @@ import './App.css'
 const Login = React.lazy(() => import('./pages/Login'));
 const Register = React.lazy(() => import('./pages/Register'));
 const Welcome = React.lazy(() => import('./pages/Welcome'));
-const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const Dashboard = React.lazy(() => import('./pages/dashboard/Dashboard'));
 
 const App = () => {
 

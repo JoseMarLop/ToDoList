@@ -14,69 +14,61 @@ import {
 import CIcon from "@coreui/icons-react";
 import {
   cilCloudDownload,
+  cilFolder,
   cilLayers,
-  cilPuzzle,
   cilSpeedometer,
 } from "@coreui/icons";
 import Header from "../../components/header/Header";
 import KanbanBoard from "../../components/kanban/KanbanBoard";
 import styles from "./Dashboard.module.scss"
+import jsonData from "../../data/data.json";
 
 const Dashboard = () => {
+  const [selectedBoard, setSelectedBoard] = React.useState(null);
+  const [boards, setBoards] = React.useState([]);
+
+  // Cargar los tableros al montar el componente
+  React.useEffect(() => {
+    setBoards(jsonData.boards);
+    setSelectedBoard(jsonData.boards[0]); // Seleccionar el primer tablero por defecto
+  }, []);
   return (
     <section className={styles.dashboard_section}>
       <Header />
       <div className={styles.dashboard_main_layout}>
-        <SidebarExample />
+        <SidebarExample boards={boards} setSelectedBoard={setSelectedBoard} />
         <main className={styles.dashboard_main_content}>
-          <KanbanBoard />
+          {selectedBoard ? (
+            <KanbanBoard board={selectedBoard} />
+          ) : (
+            <p>Selecciona un tablero</p>
+          )}
         </main>
       </div>
     </section>
   );
 };
 
-const SidebarExample = () => {
+const SidebarExample = ({ boards, setSelectedBoard }) => {
   return (
     <CSidebar className="border-end">
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand>CoreUI</CSidebarBrand>
       </CSidebarHeader>
       <CSidebarNav>
-        <CNavTitle>Nav Title</CNavTitle>
+        <CNavTitle>ToDoList</CNavTitle>
+        <CNavGroup toggler={<><CIcon customClassName="nav-icon" icon={cilFolder} /> Tableros</>}>
+          {boards.map((board, index) => (
+            <CNavItem key={index} href="#" onClick={() => setSelectedBoard(board)}>
+              <span className="nav-icon">
+                <span className="nav-icon-bullet"></span>
+              </span>{" "}
+              {board.title}
+            </CNavItem>
+          ))}
+        </CNavGroup>
         <CNavItem href="#">
           <CIcon customClassName="nav-icon" icon={cilSpeedometer} /> Nav item
-        </CNavItem>
-        <CNavItem href="#">
-          <CIcon customClassName="nav-icon" icon={cilSpeedometer} /> With badge{" "}
-          <CBadge color="primary ms-auto">NEW</CBadge>
-        </CNavItem>
-        <CNavGroup
-          toggler={
-            <>
-              <CIcon customClassName="nav-icon" icon={cilPuzzle} /> Nav dropdown
-            </>
-          }
-        >
-          <CNavItem href="#">
-            <span className="nav-icon">
-              <span className="nav-icon-bullet"></span>
-            </span>{" "}
-            Nav dropdown item
-          </CNavItem>
-          <CNavItem href="#">
-            <span className="nav-icon">
-              <span className="nav-icon-bullet"></span>
-            </span>{" "}
-            Nav dropdown item
-          </CNavItem>
-        </CNavGroup>
-        <CNavItem href="https://coreui.io">
-          <CIcon customClassName="nav-icon" icon={cilCloudDownload} /> Download
-          CoreUI
-        </CNavItem>
-        <CNavItem href="https://coreui.io/pro/">
-          <CIcon customClassName="nav-icon" icon={cilLayers} /> Try CoreUI PRO
         </CNavItem>
       </CSidebarNav>
       <CSidebarHeader className="border-top">

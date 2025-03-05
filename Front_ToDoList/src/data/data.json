@@ -1,0 +1,76 @@
+{
+  "boards": [
+    {
+      "title": "Proyecto Desarrollo Web",
+      "description": "Tareas relacionadas con el desarrollo del nuevo sitio web.",
+      "tasks": [
+        {
+          "title": "Configurar entorno",
+          "description": "Instalar Node.js, configurar React y dependencias.",
+          "status": "todo",
+          "created_at": "2024-03-01"
+        },
+        {
+          "title": "Diseñar UI",
+          "description": "Crear los wireframes y el diseño en Figma.",
+          "status": "doing",
+          "created_at": "2024-03-02"
+        },
+        {
+          "title": "Configurar API",
+          "description": "Implementar autenticación y endpoints.",
+          "status": "review",
+          "created_at": "2024-03-03"
+        },
+        {
+          "title": "Pruebas de usuario",
+          "description": "Realizar tests de usabilidad con usuarios.",
+          "status": "done",
+          "created_at": "2024-03-04"
+        },
+        {
+          "title": "Desplegar en producción",
+          "description": "Subir la aplicación a Vercel.",
+          "status": "todo",
+          "created_at": "2024-03-05"
+        }
+      ]
+    },
+    {
+      "title": "Plan de Marketing",
+      "description": "Estrategias para la promoción del producto.",
+      "tasks": [
+        {
+          "title": "Análisis de mercado",
+          "description": "Investigar competidores y tendencias.",
+          "status": "todo",
+          "created_at": "2024-03-01"
+        },
+        {
+          "title": "Definir público objetivo",
+          "description": "Segmentar clientes potenciales.",
+          "status": "doing",
+          "created_at": "2024-03-02"
+        },
+        {
+          "title": "Crear contenido",
+          "description": "Redactar publicaciones para redes sociales.",
+          "status": "review",
+          "created_at": "2024-03-03"
+        },
+        {
+          "title": "Lanzar campaña",
+          "description": "Publicar anuncios en Google Ads.",
+          "status": "done",
+          "created_at": "2024-03-04"
+        },
+        {
+          "title": "Medir resultados",
+          "description": "Analizar métricas de conversión.",
+          "status": "todo",
+          "created_at": "2024-03-05"
+        }
+      ]
+    }
+  ]
+}

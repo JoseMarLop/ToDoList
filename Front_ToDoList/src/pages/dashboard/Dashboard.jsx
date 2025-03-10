@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  CBadge,
   CSidebar,
   CSidebarBrand,
   CSidebarHeader,
@@ -13,15 +12,14 @@ import {
 
 import CIcon from "@coreui/icons-react";
 import {
-  cilCloudDownload,
   cilFolder,
-  cilLayers,
   cilSpeedometer,
 } from "@coreui/icons";
 import Header from "../../components/header/Header";
 import KanbanBoard from "../../components/kanban/KanbanBoard";
 import styles from "./Dashboard.module.scss"
 import jsonData from "../../data/data.json";
+import { getTables } from "../../data/table";
 
 const Dashboard = () => {
   const [selectedBoard, setSelectedBoard] = React.useState(null);
@@ -31,6 +29,16 @@ const Dashboard = () => {
   React.useEffect(() => {
     setBoards(jsonData.boards);
     setSelectedBoard(jsonData.boards[0]); // Seleccionar el primer tablero por defecto
+    // const fetchTables = async () => {
+    //   const result = await getTables();
+    //   console.log("API Response:", result); // Aquí mostramos la respuesta en la consola
+    //   if (result.data) {
+    //     setBoards(result.data);
+    //     setSelectedBoard(result.data[0]); // Seleccionamos el primer tablero por defecto
+    //   }
+    // };
+
+    // fetchTables();
   }, []);
   return (
     <section className={styles.dashboard_section}>

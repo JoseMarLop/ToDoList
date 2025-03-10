@@ -52,5 +52,5 @@ security:
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
 
         # Secure the rest of the API routes with ROLE_USER or ROLE_ADMIN
-        - { path: ^/api/, roles: ROLE_USER }
+        - { path: ^/api, roles: ROLE_USER }
         - { path: ^/admin/, roles: ROLE_ADMIN }

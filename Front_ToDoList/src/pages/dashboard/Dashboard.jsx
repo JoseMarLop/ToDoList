@@ -18,27 +18,19 @@ import {
 import Header from "../../components/header/Header";
 import KanbanBoard from "../../components/kanban/KanbanBoard";
 import styles from "./Dashboard.module.scss"
-import jsonData from "../../data/data.json";
 import { getTables } from "../../data/table";
 
 const Dashboard = () => {
   const [selectedBoard, setSelectedBoard] = React.useState(null);
   const [boards, setBoards] = React.useState([]);
 
-  // Cargar los tableros al montar el componente
   React.useEffect(() => {
-    setBoards(jsonData.boards);
-    setSelectedBoard(jsonData.boards[0]); // Seleccionar el primer tablero por defecto
-    // const fetchTables = async () => {
-    //   const result = await getTables();
-    //   console.log("API Response:", result); // Aquí mostramos la respuesta en la consola
-    //   if (result.data) {
-    //     setBoards(result.data);
-    //     setSelectedBoard(result.data[0]); // Seleccionamos el primer tablero por defecto
-    //   }
-    // };
-
-    // fetchTables();
+    const fetchTables = async () => {
+      const result = await getTables();
+      setBoards(result.data);
+      setSelectedBoard(result.data[0]);
+    };
+    fetchTables();
   }, []);
   return (
     <section className={styles.dashboard_section}>
@@ -71,7 +63,7 @@ const SidebarExample = ({ boards, setSelectedBoard }) => {
               <span className="nav-icon">
                 <span className="nav-icon-bullet"></span>
               </span>{" "}
-              {board.title}
+              {board.name}
             </CNavItem>
           ))}
         </CNavGroup>

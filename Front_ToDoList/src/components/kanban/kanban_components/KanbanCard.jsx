@@ -17,7 +17,7 @@ const KanbanCard = ({ id, column, task }) => {
     <div ref={setNodeRef} className={styles.kanban_card} style={movement} {...listeners} {...attributes}>
       <h4>{task.title}</h4>
       <p>{task.description}</p>
-      <span className={styles.date}>📅 {task.created_at}</span>
+      <span className={styles.date}>📅 {task.created_at.date}</span>
     </div>
   );
 };

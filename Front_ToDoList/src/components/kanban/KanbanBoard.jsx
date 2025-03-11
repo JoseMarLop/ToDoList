@@ -6,10 +6,12 @@ const KanbanBoard = ({ board }) => {
   const [columns, setColumns] = useState({ todo: [], doing: [], review: [], done: [] });
 
   useEffect(() => {
-    if (board) {
+    if (board && board.tasks) {
       const tasksByStatus = { todo: [], doing: [], review: [], done: [] };
       board.tasks.forEach((task) => {
-        tasksByStatus[task.status].push(task);
+        if (tasksByStatus[task.status]) {
+          tasksByStatus[task.status].push(task);
+        }
       });
       setColumns(tasksByStatus);
     }
@@ -28,7 +30,7 @@ const KanbanBoard = ({ board }) => {
 
     setColumns((prev) => {
       const newColumns = { ...prev };
-      newColumns[fromColumn] = newColumns[fromColumn].filter((t) => t.title !== task.title);
+      newColumns[fromColumn] = newColumns[fromColumn].filter((t) => t.id !== task.id);
       newColumns[toColumn] = [...newColumns[toColumn], { ...task, status: toColumn }];
       return newColumns;
     });

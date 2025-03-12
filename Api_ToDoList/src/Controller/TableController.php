@@ -73,7 +73,7 @@ final class TableController extends AbstractController
 
         $table = new Table();
         $table->setName($data['name']);
-        $table->setDescription($data['description'] || null);
+        $table->setDescription($data['description'] ?? null);
         $table->setCreatedAt(new \DateTimeImmutable());
         $table->setOwner($user);
         $entityManager->persist($table);

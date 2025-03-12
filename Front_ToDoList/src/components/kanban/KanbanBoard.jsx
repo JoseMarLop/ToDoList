@@ -38,7 +38,7 @@ const KanbanBoard = ({ board }) => {
 
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <h2>{board.title}</h2>
+      <h2>{board.name}</h2>
       <p>{board.description}</p>
       <div style={{ display: "flex", gap: "10px" }}>
         {Object.keys(columns).map((col) => (

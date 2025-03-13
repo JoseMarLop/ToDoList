@@ -17,3 +17,22 @@ export const getTables = async () => {
         return {error: error.message || 'Something went wrong'};
     }
 }
+
+export const addTable = async (tableData) => {
+    try{
+        const response = await fetch(`${API_URL}/newTable`, {
+            method: "POST",
+            headers: { 
+            'Authorization': `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(tableData),
+    });
+
+   const data = await response.json();
+   return data;
+
+}catch(error){
+    return {error: error.message || 'Something went wrong'};
+}
+}

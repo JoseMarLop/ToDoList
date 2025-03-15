@@ -16,7 +16,7 @@ import Header from "../../components/header/Header";
 import KanbanBoard from "../../components/kanban/KanbanBoard";
 import styles from "./Dashboard.module.scss";
 import { getTables } from "../../data/table";
-import NewTable from "../../components/modals/NewTable";
+import TableModal from "../../components/modals/TableModal";
 
 const Dashboard = () => {
   //Const for the boards
@@ -52,10 +52,10 @@ const Dashboard = () => {
 const SidebarExample = ({ boards, setSelectedBoard }) => {
   //Const for the new table modal
   const [visible, setVisible] = React.useState(false);
-  
+
   return (
     <>
-      <NewTable visible={visible} setVisible={setVisible} />
+      <TableModal visible={visible} setVisible={setVisible} mode='add' />
       <CSidebar className="border-end">
         <CSidebarHeader className="border-bottom">
           <CSidebarBrand>CoreUI</CSidebarBrand>
@@ -84,7 +84,7 @@ const SidebarExample = ({ boards, setSelectedBoard }) => {
             ))}
           </CNavGroup>
           <CNavItem href="#" onClick={() => setVisible(true)}>
-            <CIcon customClassName="nav-icon" icon={cilPlus}/> Añadir tablero
+            <CIcon customClassName="nav-icon" icon={cilPlus} /> Añadir tablero
           </CNavItem>
         </CSidebarNav>
         <CSidebarHeader className="border-top">

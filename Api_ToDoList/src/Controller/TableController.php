@@ -81,6 +81,29 @@ final class TableController extends AbstractController
         return new JsonResponse(['message' => "Board Created"]);
     }
 
+    //Update a table
+    #[Route('/api/updateTable/{id}', name: 'updateTable', methods: ['PUT'])]
+    public function updateTable(Request $request, EntityManagerInterface $entityManager,int $id): JsonResponse{
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $table = $this->tableRepository->findOneBy(['id' => $id]);
+        if (!$table) {
+            return new JsonResponse(['error' => 'Table not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        $table->setName(isset($data['name']) ? $data['name'] : $table->getName());
+        $table->setDescription(isset($data['description']) ? $data['description'] : $table->getDescription());
+        $entityManager->persist($table);
+        $entityManager->flush();
+        return new JsonResponse(['message' => 'Table updated'], Response::HTTP_OK);
+    }
+
     //Delete a table
     #[Route('/api/deleteTable/{id}', name: 'deleteTable', methods: ['DELETE'])]
     public function deleteTable(EntityManagerInterface $entityManager, int $id): JsonResponse
@@ -91,7 +114,7 @@ final class TableController extends AbstractController
             return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
 
-        $table = $this->tableRepository->findOneBy(['id' => $id, 'owner' => $user]);
+        $table = $this->tableRepository->findOneBy(['id' => $id]);
         if (!$table) {
             return new JsonResponse(['error' => 'Table not found'], Response::HTTP_NOT_FOUND);
         }

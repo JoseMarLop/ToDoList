@@ -20,7 +20,12 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
 
   return (
     <>
-      <TableModal visible={visible} setVisible={setVisible} mode="add" refreshBoards={refreshBoards} />
+      <TableModal
+        visible={visible}
+        setVisible={setVisible}
+        mode="add"
+        refreshBoards={refreshBoards}
+      />
       <CSidebar className="border-end">
         <CSidebarHeader className="border-bottom">
           <CSidebarBrand>CoreUI</CSidebarBrand>

@@ -8,7 +8,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\TableRepository;
 use App\Entity\User;
 use App\Entity\Table;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

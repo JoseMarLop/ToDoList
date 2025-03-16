@@ -17,7 +17,7 @@ import { addTable, updateTable, deleteTable } from "../../data/table";
 import CIcon from "@coreui/icons-react";
 import { cilCommentBubble, cilShortText, cilTrash } from "@coreui/icons";
 
-const TableModal = ({ visible, setVisible, board, mode }) => {
+const TableModal = ({ visible, setVisible, board, mode , refreshBoards}) => {
   const [error, setError] = useState(null);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
@@ -25,6 +25,12 @@ const TableModal = ({ visible, setVisible, board, mode }) => {
     name: board ? board.name : "",
     description: board ? board.description : "",
   });
+
+  React.useEffect(() => {
+    if (board) {
+      setTableData({ name: board.name, description: board.description });
+    }
+  }, [board]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,6 +52,7 @@ const TableModal = ({ visible, setVisible, board, mode }) => {
       return;
     } else {
       alert("Tablero añadido correctamente");
+      refreshBoards();
       setVisible(false);
     }
   };
@@ -56,12 +63,13 @@ const TableModal = ({ visible, setVisible, board, mode }) => {
       setError("El nombre del tablero no puede estar en blanco");
       return;
     }
-    const result = await updateTable(tableData);
+    const result = await updateTable(tableData,board.id);
     if (result.error) {
       setError(result.error);
       return;
     } else {
       alert("Tablero actualizado correctamente");
+      refreshBoards();
       setVisible(false);
     }
   };
@@ -73,6 +81,7 @@ const TableModal = ({ visible, setVisible, board, mode }) => {
       return;
     } else {
       alert("Tablero eliminado correctamente");
+      refreshBoards();
       setDeleteConfirmVisible(false);
       setVisible(false);
     }

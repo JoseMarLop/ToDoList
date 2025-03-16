@@ -6,7 +6,7 @@ import { cilPencil } from "@coreui/icons";
 import NewTable from "../modals/TableModal";
 import TableModal from "../modals/TableModal";
 
-const KanbanBoard = ({ board }) => {
+const KanbanBoard = ({ board, refreshBoards }) => {
   const [columns, setColumns] = useState({
     todo: [],
     doing: [],
@@ -54,7 +54,7 @@ const KanbanBoard = ({ board }) => {
 
   return (
     <>
-      <TableModal visible={visible} setVisible={setVisible} board={board} mode='edit' />
+      <TableModal visible={visible} setVisible={setVisible} board={board} mode='edit' refreshBoards={refreshBoards}/>
       <DndContext onDragEnd={handleDragEnd}>
         <div className="d-flex flex-row align-items-center">
           <h2>{board.name}</h2>

@@ -148,28 +148,36 @@ const TableModal = ({ visible, setVisible, board, mode , refreshBoards}) => {
         </CModalFooter>
       </CModal>
 
-      <CModal
-        alignment="center"
+      <DeleteConfirmModal
         visible={deleteConfirmVisible}
         onClose={() => setDeleteConfirmVisible(false)}
-      >
-        <CModalHeader>
-          <CModalTitle>Confirmar eliminación</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          ¿Estás seguro de que deseas eliminar este tablero? Esta acción no se puede deshacer.
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setDeleteConfirmVisible(false)}>
-            Cancelar
-          </CButton>
-          <CButton color="danger" onClick={handleDeleteTable}>
-            Eliminar
-          </CButton>
-        </CModalFooter>
-      </CModal>
+        onConfirm={handleDeleteTable}
+      />
     </>
   );
 };
 
 export default TableModal;
+
+
+//Modal to confirm deletion
+const DeleteConfirmModal = ({ visible, onClose, onConfirm }) => {
+  return (
+    <CModal alignment="center" visible={visible} onClose={onClose}>
+      <CModalHeader>
+        <CModalTitle>Confirmar eliminación</CModalTitle>
+      </CModalHeader>
+      <CModalBody>
+        ¿Estás seguro de que deseas eliminar este tablero? Esta acción no se puede deshacer.
+      </CModalBody>
+      <CModalFooter>
+        <CButton color="secondary" onClick={onClose}>
+          Cancelar
+        </CButton>
+        <CButton color="danger" onClick={onConfirm}>
+          Eliminar
+        </CButton>
+      </CModalFooter>
+    </CModal>
+  );
+};

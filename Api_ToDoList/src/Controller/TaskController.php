@@ -66,11 +66,11 @@ final class TaskController extends AbstractController
         $task = new Task();
         $task->setTableId($table);
         $task->setTitle($data['title']);
-        $task->setDescription($data['description']);
-        $task->setStatus($data['status']);
-        $task->setPriority($data['priority']);
+        $task->setDescription($data['description'] ?? '');
+        $task->setStatus('todo');
+        $task->setPriority($data['priority'] ?? '');
         $task->setCreatedAt(new \DateTimeImmutable());
-        $task->setDueAt($data['due_at']);
+        $task->setDueAt($data['due_at'] ?? '');
         $entityManager->persist($task);
         $entityManager->flush();
         return new JsonResponse(['message' => 'Task created'], JsonResponse::HTTP_CREATED);

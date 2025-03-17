@@ -93,10 +93,9 @@ const TableModal = ({ visible, setVisible, board, mode , refreshBoards}) => {
         alignment="center"
         visible={visible}
         onClose={() => setVisible(false)}
-        aria-labelledby="VerticallyCenteredExample"
       >
         <CModalHeader>
-          <CModalTitle id="VerticallyCenteredExample">
+          <CModalTitle>
             {mode === "add" ? "Añadir tablero" : "Editar tablero"}
           </CModalTitle>
         </CModalHeader>

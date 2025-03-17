@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { DndContext } from "@dnd-kit/core";
 import Column from "./kanban_components/Column";
 import CIcon from "@coreui/icons-react";
-import { cilPencil } from "@coreui/icons";
+import { cilPencil, cilPlus } from "@coreui/icons";
 import NewTable from "../modals/TableModal";
 import TableModal from "../modals/TableModal";
+import TaskModal from "../modals/TaskModal";
 
 const KanbanBoard = ({ board, refreshBoards }) => {
   const [columns, setColumns] = useState({
@@ -14,7 +15,8 @@ const KanbanBoard = ({ board, refreshBoards }) => {
     done: [],
   });
 
-  const [visible, setVisible] = useState(false);
+  const [tableModalVisible, setTableModalVisible] = useState(false);
+  const [taskModalVisible, setTaskModalVisible] = useState(false);
 
   useEffect(() => {
     if (board && board.tasks) {
@@ -54,7 +56,14 @@ const KanbanBoard = ({ board, refreshBoards }) => {
 
   return (
     <>
-      <TableModal visible={visible} setVisible={setVisible} board={board} mode='edit' refreshBoards={refreshBoards}/>
+      <TableModal
+        visible={tableModalVisible}
+        setVisible={setTableModalVisible}
+        board={board}
+        mode="edit"
+        refreshBoards={refreshBoards}
+      />
+      <TaskModal visible={taskModalVisible} setVisible={setTaskModalVisible} board={board}/>
       <DndContext onDragEnd={handleDragEnd}>
         <div className="d-flex flex-row align-items-center">
           <h2>{board.name}</h2>
@@ -63,10 +72,18 @@ const KanbanBoard = ({ board, refreshBoards }) => {
             className="ms-3"
             size="lg"
             style={{ cursor: "pointer" }}
-            onClick={() => setVisible(true)}
+            onClick={() => setTableModalVisible(true)}
           />
         </div>
         <p>{board.description}</p>
+        <div
+          className="d-flex flex-row align-items-center gap-2 mb-3"
+          style={{ cursor: "pointer" }}
+          onClick={() => setTaskModalVisible(true)}
+        >
+          <CIcon icon={cilPlus} size="lg" />
+          <span>Añadir tarea</span>
+        </div>
         <div style={{ display: "flex", gap: "10px" }}>
           {Object.keys(columns).map((col) => (
             <Column key={col} id={col} tasks={columns[col]} />

@@ -3,9 +3,8 @@ import { DndContext } from "@dnd-kit/core";
 import Column from "./kanban_components/Column";
 import CIcon from "@coreui/icons-react";
 import { cilPencil, cilPlus } from "@coreui/icons";
-import NewTable from "../modals/TableModal";
 import TableModal from "../modals/TableModal";
-import TaskModal from "../modals/TaskModal";
+import TaskModal from "../modals/NewTaskModal";
 
 const KanbanBoard = ({ board, refreshBoards }) => {
   const [columns, setColumns] = useState({

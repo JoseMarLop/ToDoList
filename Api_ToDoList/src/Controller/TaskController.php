@@ -41,7 +41,9 @@ final class TaskController extends AbstractController
             'description' => $task->getDescription(),
             'status' => $task->getStatus(),
             'created_at' => $task->getCreatedAt(),
-            'subtasks' => $subtasks
+            'subtasks' => $subtasks,
+            'priority' => $task->getPriority(),
+            'due_at' => $task->getDueAt(),
         ];
 
         return new JsonResponse($data, JsonResponse::HTTP_OK);

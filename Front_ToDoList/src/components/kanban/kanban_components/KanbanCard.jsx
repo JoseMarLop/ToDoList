@@ -38,7 +38,7 @@ const KanbanCard = ({ id, column, task }) => {
       ? `translate3d(${transform.x}px, ${transform.y}px, 0) rotate(${isDragging ? "5deg" : "0deg"})`
       : undefined,
     opacity: isDragging ? 0.5 : 1,
-    // transition: "transform 0.2s ease, opacity 0.2s ease",
+    cursor: isDragging ? "grabbing" : "pointer", 
   };
 
   return (
@@ -54,7 +54,7 @@ const KanbanCard = ({ id, column, task }) => {
         onMouseUp={handleMouseUp}
       >
         <h4>{task.title}</h4>
-        <p>{task.description || <span color="grey">Sin descripción</span>}</p>
+        <p>{task.description || <span style={{ color: "grey" }}>Sin descripción</span>}</p>
         <span className={styles.date}>📅 {formattedDate}</span>
       </div>
     </>

@@ -34,3 +34,38 @@ export const addTask = async (taskData) => {
     return { error: error.message || "Something went wrong" };
   }
 };
+
+export const updateTask = async (taskData, taskId) => {
+  try {
+    const response = await fetch(`${API_URL}/updateTask/${taskId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(taskData),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return { error: error.message || "Something went wrong" };
+  }
+};
+
+export const deleteTask = async (taskData,taskId) => {
+  try{
+    const response = await fetch (`${API_URL}/deleteTask/${taskId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(taskData),
+    })
+
+    const data = await response.json();
+    return data;
+  }catch (error) {
+    return { error: error.message || "Something went wrong" };
+  }
+}

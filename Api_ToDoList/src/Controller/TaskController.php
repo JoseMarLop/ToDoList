@@ -44,6 +44,7 @@ final class TaskController extends AbstractController
             'subtasks' => $subtasks,
             'priority' => $task->getPriority(),
             'due_at' => $task->getDueAt(),
+            'table_id'=>$task->getTableId()->getId()
         ];
 
         return new JsonResponse($data, JsonResponse::HTTP_OK);
@@ -98,9 +99,7 @@ final class TaskController extends AbstractController
 
         $task->setTitle(isset($data['title']) ? $data['title'] : $task->getTitle());
         $task->setDescription(isset($data['description']) ? $data['description'] : $task->getDescription());
-        $task->setStatus(isset($data['status']) ? $data['status'] : $task->getStatus());
         $task->setPriority(isset($data['priority']) ? $data['priority'] : $task->getPriority());
-        $task->setDueAt(isset($data['due_at']) ? $data['due_at'] : $task->getDueAt());
     
         $entityManager->persist($task);
         $entityManager->flush();
@@ -132,6 +131,6 @@ final class TaskController extends AbstractController
         $entityManager->remove($task);
         $entityManager->flush();
 
-        return new JsonResponse(['message' => 'Task deleted'], JsonResponse::HTTP_CREATED);
+        return new JsonResponse(['message' => 'Task deleted'], JsonResponse::HTTP_OK);
     }
 }

@@ -1,4 +1,8 @@
 import {
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
   CFormInput,
   CFormTextarea,
   CModal,
@@ -8,7 +12,7 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { useEffect, useState } from "react";
-import { getTask } from "../../data/task";
+import { getTask, updateTask, deleteTask } from "../../data/task";
 import CIcon from "@coreui/icons-react";
 import {
   cilDescription,
@@ -20,9 +24,18 @@ import {
   cilUser,
 } from "@coreui/icons";
 import styles from "./TaskModal.module.scss";
+import {
+  FcHighPriority,
+  FcLowPriority,
+  FcMediumPriority,
+} from "react-icons/fc";
 
 const TaskModal = ({ visible, setVisible, task }) => {
-  const [fullTask, setTask] = useState(null);
+  const [fullTask, setFullTask] = useState(null);
+  const [originalTask, setOriginalTask] = useState(null); // Estado para almacenar la tarea original
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false); // Estado para mostrar el modal de confirmación de borrado
 
   useEffect(() => {
     if (task?.id) {
@@ -31,41 +44,65 @@ const TaskModal = ({ visible, setVisible, task }) => {
         if (result.error) {
           alert(result.error);
         } else {
-          setTask(result);
+          setFullTask(result);
+          setOriginalTask(result);
           setTitle(result.title);
+          setDescription(result.description);
         }
       };
       handleTask();
     }
   }, [task?.id]);
 
-  //Tasks
+  // Editing the title
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [title, setTitle] = useState("");
-
   const handleTitleClick = () => {
     setIsEditingTitle(true);
   };
 
   const handleTitleBlur = () => {
-    setIsEditingTitle(false);
+    if (title.trim() === "") {
+      setTitle(originalTask?.title || "");
+      alert("El título no puede estar vacío.");
+    } else {
+      setIsEditingTitle(false);
+      setFullTask((prevTask) => ({
+        ...prevTask,
+        title: title,
+      }));
+    }
   };
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
 
-  //Subtasks
+  // Editing the description
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const handleDescriptionClick = () => {
+    setIsEditingDescription(true);
+  };
+
+  const handleDescriptionBlur = () => {
+    setIsEditingDescription(false);
+    setFullTask((prevTask) => ({
+      ...prevTask,
+      description: description,
+    }));
+  };
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
   const [hoveredSubtaskIndex, setHoveredSubtaskIndex] = useState(null);
   const [isAddingSubtask, setIsAddingSubtask] = useState(false);
 
   const handleDeleteSubtask = (index) => {
     const updatedSubtasks = [...fullTask.subtasks];
     updatedSubtasks.splice(index, 1);
-    setTask((prevTask) => ({
-      ...prevTask,
-      subtasks: updatedSubtasks,
-    }));
+    const updatedTask = { ...fullTask, subtasks: updatedSubtasks };
+    setFullTask(updatedTask);
   };
 
   const handleSubtaskClick = () => {
@@ -76,11 +113,49 @@ const TaskModal = ({ visible, setVisible, task }) => {
     setIsAddingSubtask(false);
   };
 
+  const handlePriorityChange = (priority) => {
+    setFullTask((prevTask) => ({
+      ...prevTask,
+      priority: priority,
+    }));
+  };
+
+  const handleCloseModal = () => {
+    setFullTask(originalTask);
+    setTitle(originalTask?.title);
+    setDescription(originalTask?.description);
+    setVisible(false);
+  };
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    const result = await updateTask(fullTask, fullTask.id);
+    if (result.error) {
+      alert(result.error);
+      return;
+    } else {
+      alert("Tarea editada correctamente");
+      setVisible(false);
+    }
+  };
+
+  // Handle the deletion of the task
+  const handleDeleteTask = async () => {
+    const result = await deleteTask(fullTask,fullTask.id);
+    if (result.error) {
+      console.log(result.error);
+    } else {
+      alert("Tarea eliminada correctamente");
+      setVisible(false);
+    }
+    // console.log(fullTask);
+  };
+
   return (
     <CModal
       alignment="center"
       visible={visible}
-      onClose={() => setVisible(false)}
+      onClose={handleCloseModal} // Use the custom close handler
       size="lg"
     >
       {fullTask ? (
@@ -97,14 +172,48 @@ const TaskModal = ({ visible, setVisible, task }) => {
                   value={title}
                 />
               ) : (
-                <span onClick={handleTitleClick} style={{ fontWeight: "bold" }}>
-                  {title}
-                </span>
+                <div className="d-flex flex-row gap-3 align-items-center">
+                  <span
+                    onClick={handleTitleClick}
+                    style={{ fontWeight: "bold" }}
+                  >
+                    {title}
+                  </span>
+                  <CDropdown>
+                    <CDropdownToggle
+                      color="secondary"
+                      style={{ backgroundColor: "transparent", border: "none" }}
+                    >
+                      {fullTask.priority === "1" && <FcLowPriority />}
+                      {fullTask.priority === "2" && <FcMediumPriority />}
+                      {fullTask.priority === "3" && <FcHighPriority />}
+                    </CDropdownToggle>
+                    <CDropdownMenu style={{ backgroundColor: "#313940" }}>
+                      <CDropdownItem
+                        style={{ color: "white" }}
+                        onClick={() => handlePriorityChange("1")}
+                      >
+                        <FcLowPriority /> Baja
+                      </CDropdownItem>
+                      <CDropdownItem
+                        style={{ color: "white" }}
+                        onClick={() => handlePriorityChange("2")}
+                      >
+                        <FcMediumPriority /> Media
+                      </CDropdownItem>
+                      <CDropdownItem
+                        style={{ color: "white" }}
+                        onClick={() => handlePriorityChange("3")}
+                      >
+                        <FcHighPriority /> Alta
+                      </CDropdownItem>
+                    </CDropdownMenu>
+                  </CDropdown>
+                </div>
               )}
             </CModalTitle>
           </CModalHeader>
           <CModalBody className={`d-flex flex-row ${styles.modal_body}`}>
-            {/* Input section */}
             <section className={styles.input_section}>
               {/* Description */}
               <div
@@ -114,7 +223,21 @@ const TaskModal = ({ visible, setVisible, task }) => {
                 <span>Description</span>
               </div>
               <div className="mb-3">
-                <CFormTextarea className={styles.task_description_area} value={fullTask.description}/>
+                {isEditingDescription ? (
+                  <CFormTextarea
+                    className={styles.task_description_area}
+                    value={description}
+                    onBlur={handleDescriptionBlur}
+                    onChange={handleDescriptionChange}
+                  />
+                ) : (
+                  <span
+                    onClick={handleDescriptionClick}
+                    style={{ color: description ? "lightgray" : "gray" }}
+                  >
+                    {description ? description : "No hay descripción"}
+                  </span>
+                )}
               </div>
 
               {/* Subtasks */}
@@ -167,7 +290,7 @@ const TaskModal = ({ visible, setVisible, task }) => {
                     onBlur={handleSubtaskBlur}
                   >
                     {isAddingSubtask ? (
-                      <CFormInput className={styles.subtask_input}/>
+                      <CFormInput className={styles.subtask_input} />
                     ) : (
                       <>
                         <CIcon icon={cilPlus} />
@@ -206,17 +329,26 @@ const TaskModal = ({ visible, setVisible, task }) => {
               <div
                 className={`w-75 d-flex align-items-center gap-2 ${styles.task_option_div}`}
               >
-                <span>Guardar</span>
+                <span onClick={handleSave}>Guardar</span> {/* Trigger save */}
                 <CIcon icon={cilPencil} />
               </div>
               <div
                 className={`w-75 d-flex align-items-center gap-2 ${styles.task_option_div}`}
               >
-                <span>Borrar</span>
+                <span onClick={() => setIsConfirmingDelete(true)}>Borrar</span>
                 <CIcon icon={cilTrash} />
               </div>
             </section>
           </CModalBody>
+
+          {/* Confirm Delete Modal */}
+          {isConfirmingDelete && (
+            <ConfirmDeleteModal
+              visible={isConfirmingDelete}
+              setVisible={setIsConfirmingDelete}
+              onConfirm={handleDeleteTask}
+            />
+          )}
         </>
       ) : (
         <div>
@@ -224,6 +356,40 @@ const TaskModal = ({ visible, setVisible, task }) => {
           Cargando...
         </div>
       )}
+    </CModal>
+  );
+};
+
+// ConfirmDeleteModal Component
+const ConfirmDeleteModal = ({ visible, setVisible, onConfirm }) => {
+  const handleClose = () => {
+    setVisible(false);
+  };
+
+  const handleConfirm = () => {
+    onConfirm();
+    setVisible(false);
+  };
+
+  return (
+    <CModal alignment="center" visible={visible} onClose={handleClose}>
+      <CModalHeader>
+        <CModalTitle>Confirmación de Borrado</CModalTitle>
+      </CModalHeader>
+      <CModalBody>
+        <p>
+          ¿Estás seguro de que deseas borrar esta tarea? Esta acción no se puede
+          deshacer.
+        </p>
+        <div className="d-flex justify-content-end gap-3">
+          <button className="btn btn-secondary" onClick={handleClose}>
+            Cancelar
+          </button>
+          <button className="btn btn-danger" onClick={handleConfirm}>
+            Borrar
+          </button>
+        </div>
+      </CModalBody>
     </CModal>
   );
 };

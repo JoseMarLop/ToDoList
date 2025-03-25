@@ -69,3 +69,39 @@ export const deleteTask = async (taskData,taskId) => {
     return { error: error.message || "Something went wrong" };
   }
 }
+
+export const addSubtask = async(tableId,subtaskData) => {
+    try{
+      const response = await fetch (`${API_URL}/deleteTask/${tableId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(subtaskData),
+      })
+      const data = await response.json();
+      return data;
+    }catch(error){
+      return { error: error.message || 'Something went wrong'};
+    }
+}
+
+export const deleteSubtask = async(subtaskId) => {
+  try{
+    const response = await fetch (`${API_URL}/deleteTask/${subtaskId}/`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }
+    })
+    const data = await response.json();
+    return data;
+  }catch(error){
+    return { error: error.message || 'Something went wrong'};
+  }
+}
+
+
+

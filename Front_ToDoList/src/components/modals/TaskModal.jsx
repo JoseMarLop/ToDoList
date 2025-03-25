@@ -12,9 +12,11 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { useEffect, useState } from "react";
-import { getTask, updateTask, deleteTask } from "../../data/task";
+import { getTask, updateTask, deleteTask,addSubtask,deleteSubtask } from "../../data/task";
 import CIcon from "@coreui/icons-react";
 import {
+  cilCheck,
+  cilCheckAlt,
   cilDescription,
   cilList,
   cilPencil,
@@ -95,24 +97,6 @@ const TaskModal = ({ visible, setVisible, task }) => {
     setDescription(e.target.value);
   };
 
-  const [hoveredSubtaskIndex, setHoveredSubtaskIndex] = useState(null);
-  const [isAddingSubtask, setIsAddingSubtask] = useState(false);
-
-  const handleDeleteSubtask = (index) => {
-    const updatedSubtasks = [...fullTask.subtasks];
-    updatedSubtasks.splice(index, 1);
-    const updatedTask = { ...fullTask, subtasks: updatedSubtasks };
-    setFullTask(updatedTask);
-  };
-
-  const handleSubtaskClick = () => {
-    setIsAddingSubtask(true);
-  };
-
-  const handleSubtaskBlur = () => {
-    setIsAddingSubtask(false);
-  };
-
   const handlePriorityChange = (priority) => {
     setFullTask((prevTask) => ({
       ...prevTask,
@@ -141,7 +125,7 @@ const TaskModal = ({ visible, setVisible, task }) => {
 
   // Handle the deletion of the task
   const handleDeleteTask = async () => {
-    const result = await deleteTask(fullTask,fullTask.id);
+    const result = await deleteTask(fullTask, fullTask.id);
     if (result.error) {
       console.log(result.error);
     } else {
@@ -151,11 +135,68 @@ const TaskModal = ({ visible, setVisible, task }) => {
     // console.log(fullTask);
   };
 
+  //Subtask functions
+  const [hoveredSubtaskIndex, setHoveredSubtaskIndex] = useState(null);
+  const [isAddingSubtask, setIsAddingSubtask] = useState(false);
+  const [newSubtaskTitle, setNewSubtaskTitle] = useState("");
+
+  // Función para agregar una nueva subtarea
+  const handleAddSubtask = async () => {
+    if (newSubtaskTitle.trim() === "") {
+      alert("El título de la subtarea no puede estar vacío.");
+      return;
+    }
+
+    // Datos para la nueva subtarea
+    const subtaskData = { title: newSubtaskTitle };
+
+    // Llamamos a la función `addSubtask` para guardar la nueva subtarea
+    const result = await addSubtask(fullTask.id, subtaskData);
+    if (result.error) {
+      alert(result.error);
+    } else {
+      // Si se agregó correctamente, actualizamos el estado de subtareas
+      setFullTask((prevTask) => ({
+        ...prevTask,
+        subtasks: [...prevTask.subtasks, result.subtask],
+      }));
+      setNewSubtaskTitle(""); // Limpiar el campo de subtarea
+      setIsAddingSubtask(false); // Volver al estado inicial
+    }
+  };
+
+  // Función para eliminar una subtarea
+  const handleDeleteSubtask = async (index) => {
+    const subtaskId = fullTask.subtasks[index].id;
+
+    // Llamamos a la función `deleteSubtask` para eliminar la subtarea de la base de datos
+    const result = await deleteSubtask(subtaskId);
+    if (result.error) {
+      alert(result.error);
+    } else {
+      // Si la eliminación fue exitosa, actualizamos el estado
+      const updatedSubtasks = [...fullTask.subtasks];
+      updatedSubtasks.splice(index, 1);
+      setFullTask((prevTask) => ({
+        ...prevTask,
+        subtasks: updatedSubtasks,
+      }));
+    }
+  };
+
+  const handleSubtaskClick = () => {
+    setIsAddingSubtask(true);
+  };
+
+  const handleSubtaskBlur = () => {
+    setIsAddingSubtask(false);
+  };
+
   return (
     <CModal
       alignment="center"
       visible={visible}
-      onClose={handleCloseModal} // Use the custom close handler
+      onClose={handleCloseModal}
       size="lg"
     >
       {fullTask ? (
@@ -290,7 +331,10 @@ const TaskModal = ({ visible, setVisible, task }) => {
                     onBlur={handleSubtaskBlur}
                   >
                     {isAddingSubtask ? (
-                      <CFormInput className={styles.subtask_input} />
+                      <div className="d-flex flex-row align-items-center gap-2">
+                      <CFormInput className={styles.subtask_input} value={}/>
+                      <CIcon icon={cilCheckAlt} size="xxl" className="mt-2" onClick={handleAddSubtask}/>
+                      </div>
                     ) : (
                       <>
                         <CIcon icon={cilPlus} />

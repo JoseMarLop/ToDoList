@@ -29,21 +29,13 @@ final class TaskController extends AbstractController
         if (empty($task)) {
             return new JsonResponse(['message' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
         }
-        $subtasks = [];
-        foreach ($task->getSubtasks() as $subtask) {
-            $subtasks[] = [
-                'id' => $subtask->getId(),
-                'title' => $subtask->getTitle(),
-                'status' => $subtask->getStatus(),
-            ];
-        }
+        
         $data = [
             'id' => $task->getId(),
             'title' => $task->getTitle(),
             'description' => $task->getDescription(),
             'status' => $task->getStatus(),
             'created_at' => $task->getCreatedAt(),
-            'subtasks' => $subtasks,
             'priority' => $task->getPriority(),
             'due_at' => $task->getDueAt(),
             'table_id' => $task->getTableId()->getId()
@@ -136,6 +128,31 @@ final class TaskController extends AbstractController
         return new JsonResponse(['message' => 'Task deleted'], JsonResponse::HTTP_OK);
     }
 
+    #[Route('/api/subtask/{task_id}', name: 'getSubTask', methods: ['GET'])]
+    public function getSubtasks(int $task_id): JsonResponse{
+         /** @var User $user */
+         $user = $this->getUser();
+         if (!$user) {
+             return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+         }
+
+         $task = $this->taskRepository->findOneBy(["id" => $task_id]);
+         if (!$task) {
+             return new JsonResponse(['error' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
+         }
+
+        $subtasks = [];
+        foreach ($task->getSubtasks() as $subtask) {
+            $subtasks[] = [
+                'id' => $subtask->getId(),
+                'title' => $subtask->getTitle(),
+                'status' => $subtask->getStatus(),
+            ];
+        }
+
+        return new JsonResponse($subtasks, JsonResponse::HTTP_OK);
+    }
+
 
     #[Route('/api/addSubtask/{task_id}', name: 'addSubTask', methods: ['POST'])]
     public function addSubTask(Request $request, EntityManagerInterface $entityManager, int $task_id): JsonResponse
@@ -171,7 +188,7 @@ final class TaskController extends AbstractController
         return new JsonResponse(['message' => 'Subtask created successfully'], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/api/deleteSubtask/{{subtaskid}', name: 'deleteSubTask', methods: ['DELETE'])]
+    #[Route('/api/deleteSubtask/{subtaskid}', name: 'deleteSubTask', methods: ['DELETE'])]
     public function deleteSubtask(int $subtaskid, EntityManagerInterface $entityManager): JsonResponse
     {
         /** @var User $user */
@@ -199,4 +216,5 @@ final class TaskController extends AbstractController
 
         return new JsonResponse(['message' => 'Subtask deleted successfully'], JsonResponse::HTTP_OK);
     }
+
 }

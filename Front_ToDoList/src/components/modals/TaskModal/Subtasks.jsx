@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { addSubtask } from "../../../data/task";
+import { use, useEffect, useState } from "react";
+import { addSubtask,getSubtasks,deleteSubtask } from "../../../data/task";
 import CIcon from "@coreui/icons-react";
 import { cilCheckAlt, cilList, cilPlus, cilTrash, cilX } from "@coreui/icons";
 import styles from "./TaskModal.module.scss";
@@ -18,6 +18,25 @@ const Subtasks = ({ fullTask }) => {
   const [subtaskData, setSubtaskData] = useState({
     title: "",
   });
+  const [subtasks, setSubtasks] = useState([]); 
+  
+  const handleSubtasks = async () => {
+    try {
+        const result = await getSubtasks(fullTask.id); 
+        if (result.error) {
+            alert(result.error); 
+        } else {
+            setSubtasks(result); 
+        }
+    } catch (error) {
+        alert("Error al obtener las subtareas");
+        console.error(error);
+    }
+};
+
+  useEffect(() => {
+    handleSubtasks();
+  }, [fullTask.id]);
 
   const handleSubtaskChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +47,8 @@ const Subtasks = ({ fullTask }) => {
   };
 
   // Function to add a new subtask to the task
-  const handleAddSubtask = async () => {
+  const handleAddSubtask = async (e) => {
+    e.preventDefault();
     if (subtaskData.title.trim() === "") {
       alert("El título de la subtarea no puede estar vacío.");
       return;
@@ -43,8 +63,22 @@ const Subtasks = ({ fullTask }) => {
         title: "",
       });
       setIsAddingSubtask(false);
+      handleSubtasks();
     }
   };
+
+  const handleDeleteSubtask = async (subtaskId) => {
+
+    // console.log("Click hecho en id:" + subtaskId)
+    const result = deleteSubtask(subtaskId);
+
+    if(result.error){
+        alert(result.error);
+    }else{
+        alert("Borrado exitoso");
+        handleSubtasks();
+    }
+  }
 
   return (
     <>
@@ -55,9 +89,9 @@ const Subtasks = ({ fullTask }) => {
         <span>Subtareas</span>
       </div>
       <div className="mb-3 w-50">
-        {fullTask.subtasks && fullTask.subtasks.length > 0 ? (
+        {subtasks && subtasks.length > 0 ? (
           <ul>
-            {fullTask.subtasks.map((subtask, index) => (
+            {subtasks.map((subtask, index) => (
               <li
                 key={index}
                 onMouseEnter={() => setHoveredSubtaskIndex(index)}
@@ -75,6 +109,7 @@ const Subtasks = ({ fullTask }) => {
                       marginLeft: "10px",
                       color: "red",
                     }}
+                    onClick={() => handleDeleteSubtask(subtask.id)}
                   />
                 )}
               </li>

@@ -12,7 +12,13 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { useEffect, useState } from "react";
-import { getTask, updateTask, deleteTask,addSubtask,deleteSubtask } from "../../data/task";
+import {
+  getTask,
+  updateTask,
+  deleteTask,
+  addSubtask,
+  deleteSubtask,
+} from "../../data/task";
 import CIcon from "@coreui/icons-react";
 import {
   cilCheck,
@@ -332,8 +338,16 @@ const TaskModal = ({ visible, setVisible, task }) => {
                   >
                     {isAddingSubtask ? (
                       <div className="d-flex flex-row align-items-center gap-2">
-                      <CFormInput className={styles.subtask_input} value={}/>
-                      <CIcon icon={cilCheckAlt} size="xxl" className="mt-2" onClick={handleAddSubtask}/>
+                        <CFormInput
+                          className={styles.subtask_input}
+                          value={newSubtaskTitle}
+                        />
+                        <CIcon
+                          icon={cilCheckAlt}
+                          size="xxl"
+                          className="mt-2"
+                          onClick={handleAddSubtask}
+                        />
                       </div>
                     ) : (
                       <>
@@ -378,8 +392,9 @@ const TaskModal = ({ visible, setVisible, task }) => {
               </div>
               <div
                 className={`w-75 d-flex align-items-center gap-2 ${styles.task_option_div}`}
+                onClick={() => setIsConfirmingDelete(true)}
               >
-                <span onClick={() => setIsConfirmingDelete(true)}>Borrar</span>
+                <span>Borrar</span>
                 <CIcon icon={cilTrash} />
               </div>
             </section>

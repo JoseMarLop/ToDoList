@@ -13,7 +13,7 @@ import {
   CModalHeader,
   CModalTitle,
 } from "@coreui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addTask } from "../../data/task";
 import {
   FcHighPriority,
@@ -29,6 +29,14 @@ const NewTaskModal = ({ visible, setVisible, board }) => {
     table_id: board.id,
   });
 
+  // Uso de useEffect para actualizar table_id cuando board.id cambia
+  useEffect(() => {
+    setTaskData((prevData) => ({
+      ...prevData,
+      table_id: board.id,
+    }));
+  }, [board.id]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTaskData((prevData) => ({
@@ -43,6 +51,7 @@ const NewTaskModal = ({ visible, setVisible, board }) => {
       alert("El título de la tarea no puede estar en blanco");
       return;
     }
+    console.log("taskData antes de la solicitud:", taskData);
     const result = await addTask(taskData);
     if (result.error) {
       alert(result.error);
@@ -74,6 +83,7 @@ const NewTaskModal = ({ visible, setVisible, board }) => {
     >
       <CModalHeader>
         <CModalTitle>Añadir tarea</CModalTitle>
+        <span>Board id: {board.id}</span>
       </CModalHeader>
       <CModalBody>
         <CForm>
@@ -106,9 +116,7 @@ const NewTaskModal = ({ visible, setVisible, board }) => {
           {/* Priority */}
           <div className="mb-3 w-50">
             <CInputGroup>
-              <CInputGroupText>
-                {getPriorityIcon()}
-              </CInputGroupText>
+              <CInputGroupText>{getPriorityIcon()}</CInputGroupText>
               <select
                 className="form-select"
                 name="priority"

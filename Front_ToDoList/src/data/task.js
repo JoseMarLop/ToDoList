@@ -70,9 +70,9 @@ export const deleteTask = async (taskData,taskId) => {
   }
 }
 
-export const addSubtask = async(tableId,subtaskData) => {
+export const addSubtask = async(taskId,subtaskData) => {
     try{
-      const response = await fetch (`${API_URL}/deleteTask/${tableId}`, {
+      const response = await fetch (`${API_URL}/addSubtask/${taskId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -89,7 +89,7 @@ export const addSubtask = async(tableId,subtaskData) => {
 
 export const deleteSubtask = async(subtaskId) => {
   try{
-    const response = await fetch (`${API_URL}/deleteTask/${subtaskId}/`, {
+    const response = await fetch (`${API_URL}/deleteSubtask/${subtaskId}/`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

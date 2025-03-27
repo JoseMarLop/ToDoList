@@ -29,7 +29,6 @@ const NewTaskModal = ({ visible, setVisible, board }) => {
     table_id: board.id,
   });
 
-  // Uso de useEffect para actualizar table_id cuando board.id cambia
   useEffect(() => {
     setTaskData((prevData) => ({
       ...prevData,

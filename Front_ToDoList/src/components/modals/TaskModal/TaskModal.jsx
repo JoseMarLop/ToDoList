@@ -18,10 +18,9 @@ import {
   deleteTask,
   addSubtask,
   deleteSubtask,
-} from "../../data/task";
+} from "../../../data/task";
 import CIcon from "@coreui/icons-react";
 import {
-  cilCheck,
   cilCheckAlt,
   cilDescription,
   cilList,
@@ -30,6 +29,7 @@ import {
   cilSpeech,
   cilTrash,
   cilUser,
+  cilX,
 } from "@coreui/icons";
 import styles from "./TaskModal.module.scss";
 import {
@@ -38,13 +38,17 @@ import {
   FcMediumPriority,
 } from "react-icons/fc";
 
+import Subtasks from "./Subtasks";
+
 const TaskModal = ({ visible, setVisible, task }) => {
+  // State variables for task details
   const [fullTask, setFullTask] = useState(null);
-  const [originalTask, setOriginalTask] = useState(null); // Estado para almacenar la tarea original
+  const [originalTask, setOriginalTask] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false); // Estado para mostrar el modal de confirmación de borrado
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
+  // Effect hook to fetch task data when task ID is available
   useEffect(() => {
     if (task?.id) {
       const handleTask = async () => {
@@ -62,12 +66,19 @@ const TaskModal = ({ visible, setVisible, task }) => {
     }
   }, [task?.id]);
 
-  // Editing the title
+  /*
+    ################################################################
+    ########################## TASKS ###############################
+    ################################################################
+  */
+
+  // State and handlers for editing the title of the task
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const handleTitleClick = () => {
     setIsEditingTitle(true);
   };
 
+  // State and handlers for title blur (when user finishes editing)
   const handleTitleBlur = () => {
     if (title.trim() === "") {
       setTitle(originalTask?.title || "");
@@ -81,16 +92,18 @@ const TaskModal = ({ visible, setVisible, task }) => {
     }
   };
 
+  // State and handlers for changing the title
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
 
-  // Editing the description
+  // State and handlers for editing the description of the task
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const handleDescriptionClick = () => {
     setIsEditingDescription(true);
   };
 
+  // State and handlers for description blur (when user finishes editing)
   const handleDescriptionBlur = () => {
     setIsEditingDescription(false);
     setFullTask((prevTask) => ({
@@ -99,10 +112,12 @@ const TaskModal = ({ visible, setVisible, task }) => {
     }));
   };
 
+  // State and handlers for changing the description
   const handleDescriptionChange = (e) => {
     setDescription(e.target.value);
   };
 
+  // Function to handle priority change of the task
   const handlePriorityChange = (priority) => {
     setFullTask((prevTask) => ({
       ...prevTask,
@@ -110,6 +125,7 @@ const TaskModal = ({ visible, setVisible, task }) => {
     }));
   };
 
+  // Function to close the modal and reset task details
   const handleCloseModal = () => {
     setFullTask(originalTask);
     setTitle(originalTask?.title);
@@ -117,6 +133,7 @@ const TaskModal = ({ visible, setVisible, task }) => {
     setVisible(false);
   };
 
+  // Function to save task after editing
   const handleSave = async (e) => {
     e.preventDefault();
     const result = await updateTask(fullTask, fullTask.id);
@@ -129,7 +146,7 @@ const TaskModal = ({ visible, setVisible, task }) => {
     }
   };
 
-  // Handle the deletion of the task
+  // Function to handle task deletion
   const handleDeleteTask = async () => {
     const result = await deleteTask(fullTask, fullTask.id);
     if (result.error) {
@@ -138,65 +155,68 @@ const TaskModal = ({ visible, setVisible, task }) => {
       alert("Tarea eliminada correctamente");
       setVisible(false);
     }
-    // console.log(fullTask);
   };
 
-  //Subtask functions
-  const [hoveredSubtaskIndex, setHoveredSubtaskIndex] = useState(null);
-  const [isAddingSubtask, setIsAddingSubtask] = useState(false);
-  const [newSubtaskTitle, setNewSubtaskTitle] = useState("");
+  /*
+    ################################################################
+    ######################### SUBTASKS #############################
+    ################################################################
+  */
 
-  // Función para agregar una nueva subtarea
-  const handleAddSubtask = async () => {
-    if (newSubtaskTitle.trim() === "") {
-      alert("El título de la subtarea no puede estar vacío.");
-      return;
-    }
+  // // State and handlers for managing subtasks
+  // const [hoveredSubtaskIndex, setHoveredSubtaskIndex] = useState(null);
+  // const [isAddingSubtask, setIsAddingSubtask] = useState(false);
+  // const [subtaskData, setSubtaskData] = useState({
+  //   title: "",
+  // });
 
-    // Datos para la nueva subtarea
-    const subtaskData = { title: newSubtaskTitle };
+  // const handleSubtaskChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setSubtaskData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
 
-    // Llamamos a la función `addSubtask` para guardar la nueva subtarea
-    const result = await addSubtask(fullTask.id, subtaskData);
-    if (result.error) {
-      alert(result.error);
-    } else {
-      // Si se agregó correctamente, actualizamos el estado de subtareas
-      setFullTask((prevTask) => ({
-        ...prevTask,
-        subtasks: [...prevTask.subtasks, result.subtask],
-      }));
-      setNewSubtaskTitle(""); // Limpiar el campo de subtarea
-      setIsAddingSubtask(false); // Volver al estado inicial
-    }
-  };
+  // Function to add a new subtask to the task
+  // const handleAddSubtask = async () => {
+  //   if (subtaskData.title.trim() === "") {
+  //     alert("El título de la subtarea no puede estar vacío.");
+  //     return;
+  //   }
+  //   console.log(subtaskData);
 
-  // Función para eliminar una subtarea
-  const handleDeleteSubtask = async (index) => {
-    const subtaskId = fullTask.subtasks[index].id;
+  //   const result = await addSubtask(fullTask.id, subtaskData);
+  //   if (result.error) {
+  //     alert(result.error);
+  //   } else {
+  //     setFullTask((prevTask) => ({
+  //       ...prevTask,
+  //       subtasks: [...prevTask.subtasks, result.subtask],
+  //     }));
+  //     setSubtaskData({
+  //       title: "",
+  //     });
+  //     setIsAddingSubtask(false);
+  //   }
+  // };
 
-    // Llamamos a la función `deleteSubtask` para eliminar la subtarea de la base de datos
-    const result = await deleteSubtask(subtaskId);
-    if (result.error) {
-      alert(result.error);
-    } else {
-      // Si la eliminación fue exitosa, actualizamos el estado
-      const updatedSubtasks = [...fullTask.subtasks];
-      updatedSubtasks.splice(index, 1);
-      setFullTask((prevTask) => ({
-        ...prevTask,
-        subtasks: updatedSubtasks,
-      }));
-    }
-  };
+  // // Function to delete a subtask from the task
+  // const handleDeleteSubtask = async (index) => {
+  //   const subtaskId = fullTask.subtasks[index].id;
 
-  const handleSubtaskClick = () => {
-    setIsAddingSubtask(true);
-  };
-
-  const handleSubtaskBlur = () => {
-    setIsAddingSubtask(false);
-  };
+  //   const result = await deleteSubtask(subtaskId);
+  //   if (result.error) {
+  //     alert(result.error);
+  //   } else {
+  //     const updatedSubtasks = [...fullTask.subtasks];
+  //     updatedSubtasks.splice(index, 1);
+  //     setFullTask((prevTask) => ({
+  //       ...prevTask,
+  //       subtasks: updatedSubtasks,
+  //     }));
+  //   }
+  // };
 
   return (
     <CModal
@@ -289,13 +309,14 @@ const TaskModal = ({ visible, setVisible, task }) => {
 
               {/* Subtasks */}
               <div>
-                <div
+                <Subtasks fullTask={fullTask} />
+                {/* <div
                   className={`${styles.description_div} d-flex align-items-center gap-2 mb-3`}
                 >
                   <CIcon icon={cilList} size="xl" />
                   <span>Subtareas</span>
                 </div>
-                <div className="mb-3 w-50">
+                {/* <div className="mb-3 w-50">
                   {fullTask.subtasks && fullTask.subtasks.length > 0 ? (
                     <ul>
                       {fullTask.subtasks.map((subtask, index) => (
@@ -333,20 +354,30 @@ const TaskModal = ({ visible, setVisible, task }) => {
                   <div
                     className="d-flex gap-2 align-items-center"
                     style={{ cursor: "pointer" }}
-                    onClick={handleSubtaskClick}
-                    onBlur={handleSubtaskBlur}
+                    onClick={() => setIsAddingSubtask(true)}
                   >
                     {isAddingSubtask ? (
                       <div className="d-flex flex-row align-items-center gap-2">
                         <CFormInput
                           className={styles.subtask_input}
-                          value={newSubtaskTitle}
+                          name="title"
+                          value={subtaskData.title}
+                          onChange={handleSubtaskChange}
                         />
                         <CIcon
                           icon={cilCheckAlt}
                           size="xxl"
                           className="mt-2"
                           onClick={handleAddSubtask}
+                        />
+
+                        <CIcon
+                          icon={cilX}
+                          size="xxl"
+                          className="mt-2"
+                          onClick={() => {
+                          
+                          }}
                         />
                       </div>
                     ) : (
@@ -358,7 +389,7 @@ const TaskModal = ({ visible, setVisible, task }) => {
                       </>
                     )}
                   </div>
-                </div>
+                </div> */}
 
                 {/* Comments */}
                 <div

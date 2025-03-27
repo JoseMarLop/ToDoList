@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import styles from "./KanbanCard.module.scss";
-import TaskModal from "../../modals/TaskModal";
+import TaskModal from "../../modals/TaskModal/TaskModal";
 
 const KanbanCard = ({ id, column, task }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({

@@ -137,7 +137,7 @@ final class TaskController extends AbstractController
     }
 
 
-    #[Route('/api/addSubTask/{task_id}', name: 'addSubTask', methods: ['POST'])]
+    #[Route('/api/addSubtask/{task_id}', name: 'addSubTask', methods: ['POST'])]
     public function addSubTask(Request $request, EntityManagerInterface $entityManager, int $task_id): JsonResponse
     {
         /** @var User $user */
@@ -160,6 +160,7 @@ final class TaskController extends AbstractController
 
         $subtask = new Subtask();
         $subtask->setTitle($data['title']);
+        $subtask->setStatus('todo');
 
         $task->addSubTask($subtask);
 

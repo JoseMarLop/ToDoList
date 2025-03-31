@@ -30,21 +30,21 @@ class Table
     private ?User $owner = null;
 
     /**
-     * @var Collection<int, User>
-     */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'member_tables')]
-    private Collection $members;
-
-    /**
      * @var Collection<int, Task>
      */
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'table_id', orphanRemoval: true)]
     private Collection $tasks;
 
+    /**
+     * @var Collection<int, Member>
+     */
+    #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'board', orphanRemoval: true)]
+    private Collection $members;
+
     public function __construct()
     {
-        $this->members = new ArrayCollection();
         $this->tasks = new ArrayCollection();
+        $this->members = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,29 +100,6 @@ class Table
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getMembers(): Collection
-    {
-        return $this->members;
-    }
-
-    public function addMember(User $member): static
-    {
-        if (!$this->members->contains($member)) {
-            $this->members->add($member);
-        }
-
-        return $this;
-    }
-
-    public function removeMember(User $member): static
-    {
-        $this->members->removeElement($member);
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Task>
@@ -148,6 +125,36 @@ class Table
             // set the owning side to null (unless already changed)
             if ($task->getTableId() === $this) {
                 $task->setTableId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Member>
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(Member $member): static
+    {
+        if (!$this->members->contains($member)) {
+            $this->members->add($member);
+            $member->setBoard($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMember(Member $member): static
+    {
+        if ($this->members->removeElement($member)) {
+            // set the owning side to null (unless already changed)
+            if ($member->getBoard() === $this) {
+                $member->setBoard(null);
             }
         }
 

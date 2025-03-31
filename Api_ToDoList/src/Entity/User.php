@@ -40,11 +40,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Table::class, mappedBy: 'owner', orphanRemoval: true)]
     private Collection $tables;
 
-    /**
-     * @var Collection<int, Table>
-     */
-    #[ORM\ManyToMany(targetEntity: Table::class, mappedBy: 'members')]
-    private Collection $member_tables;
 
     /**
      * @var Collection<int, Task>
@@ -52,13 +47,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'assignee_id')]
     private Collection $assigned_tasks;
 
+    /**
+     * @var Collection<int, Member>
+     */
+    #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $member_tables;
+
 
 
     public function __construct()
     {
         $this->tables = new ArrayCollection();
-        $this->member_tables = new ArrayCollection();
         $this->assigned_tasks = new ArrayCollection();
+        $this->member_tables = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -166,32 +167,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Table>
-     */
-    public function getMemberTables(): Collection
-    {
-        return $this->member_tables;
-    }
-
-    public function addMemberTable(Table $memberTable): static
-    {
-        if (!$this->member_tables->contains($memberTable)) {
-            $this->member_tables->add($memberTable);
-            $memberTable->addMember($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMemberTable(Table $memberTable): static
-    {
-        if ($this->member_tables->removeElement($memberTable)) {
-            $memberTable->removeMember($this);
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Task>
@@ -217,6 +192,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($assignedTask->getAssigneeId() === $this) {
                 $assignedTask->setAssigneeId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Member>
+     */
+    public function getMemberTables(): Collection
+    {
+        return $this->member_tables;
+    }
+
+    public function addMemberTable(Member $memberTable): static
+    {
+        if (!$this->member_tables->contains($memberTable)) {
+            $this->member_tables->add($memberTable);
+            $memberTable->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMemberTable(Member $memberTable): static
+    {
+        if ($this->member_tables->removeElement($memberTable)) {
+            // set the owning side to null (unless already changed)
+            if ($memberTable->getUser() === $this) {
+                $memberTable->setUser(null);
             }
         }
 

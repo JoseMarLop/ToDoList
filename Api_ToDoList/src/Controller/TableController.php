@@ -54,6 +54,79 @@ final class TableController extends AbstractController
         return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
+    #[Route('/api/alltables', name: 'getAllUserTables', methods: ['GET'])]
+    public function getAllUserTables(): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+        
+        $ownerTables = $this->tableRepository->findBy(['owner' => $user]);
+
+        // Tablas de las cuales el usuario es miembro
+        $memberTables = [];
+        foreach ($user->getMemberTables() as $member) {
+            // Aquí obtenemos el tablero desde la entidad miembro
+            $memberTables[] = $member->getBoard();
+        }
+    
+        // Preparamos los datos para las tablas de las cuales el usuario es dueño
+        $ownerData = [];
+        foreach ($ownerTables as $table) {
+            $tasks = [];
+            foreach ($table->getTasks() as $task) {
+                $tasks[] = [
+                    'id' => $task->getId(),
+                    'title' => $task->getTitle(),
+                    'description' => $task->getDescription(),
+                    'status' => $task->getStatus(),
+                    'created_at' => $task->getCreatedAt(),
+                ];
+            }
+            $ownerData[] = [
+                'id' => $table->getId(),
+                'name' => $table->getName(),
+                'description' => $table->getDescription(),
+                'created_at' => $table->getCreatedAt(),
+                'owner' => $user->getId(),
+                'tasks' => $tasks,
+            ];
+        }
+    
+        // Preparamos los datos para las tablas de las cuales el usuario es miembro
+        $memberData = [];
+        foreach ($memberTables as $table) {
+            $tasks = [];
+            foreach ($table->getTasks() as $task) {
+                $tasks[] = [
+                    'id' => $task->getId(),
+                    'title' => $task->getTitle(),
+                    'description' => $task->getDescription(),
+                    'status' => $task->getStatus(),
+                    'created_at' => $task->getCreatedAt(),
+                ];
+            }
+            $memberData[] = [
+                'id' => $table->getId(),
+                'name' => $table->getName(),
+                'description' => $table->getDescription(),
+                'created_at' => $table->getCreatedAt(),
+                'owner' => $table->getOwner()->getId(),
+                'tasks' => $tasks,
+            ];
+        }
+    
+        // Devolvemos los resultados organizados en dos claves: 'owned' y 'member'
+        $data = [
+            'owned' => $ownerData,
+            'member' => $memberData,
+        ];
+    
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
+    }
+
     //Create a new table for the logged user
     #[Route('/api/newTable', name: 'addTable', methods: ['POST'])]
     public function addTable(Request $request, EntityManagerInterface $entityManager): JsonResponse
@@ -82,7 +155,8 @@ final class TableController extends AbstractController
 
     //Update a table
     #[Route('/api/updateTable/{id}', name: 'updateTable', methods: ['PUT'])]
-    public function updateTable(Request $request, EntityManagerInterface $entityManager,int $id): JsonResponse{
+    public function updateTable(Request $request, EntityManagerInterface $entityManager, int $id): JsonResponse
+    {
         /** @var User $user */
         $user = $this->getUser();
         if (!$user) {

@@ -39,19 +39,26 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
               </>
             }
           >
-            {boards.map((board, index) => (
-              <CNavItem
-                key={index}
-                className="d-flex flex-row align-items-center"
-                href="#"
-                onClick={() => setSelectedBoard(board)}
-              >
-                <span className="nav-icon">
-                  <span className="nav-icon-bullet"></span>
-                </span>{" "}
-                {board.name}
+           {boards && boards.length > 0 ? (
+              boards.map((board, index) => (
+                <CNavItem
+                  key={index}
+                  className="d-flex flex-row align-items-center"
+                  href="#"
+                  onClick={() => setSelectedBoard(board)}
+                >
+                  <span className="nav-icon">
+                    <span className="nav-icon-bullet"></span>
+                  </span>{" "}
+                  {board.name}
+                </CNavItem>
+              ))
+            ) : (
+              // Mensaje cuando no hay tableros
+              <CNavItem className="text-muted">
+                No hay tableros disponibles.
               </CNavItem>
-            ))}
+            )}
           </CNavGroup>
           <CNavItem href="#" onClick={() => setVisible(true)}>
             <CIcon customClassName="nav-icon" icon={cilPlus} /> Añadir tablero

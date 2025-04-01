@@ -11,11 +11,10 @@ import {
 } from "@coreui/react";
 
 import CIcon from "@coreui/icons-react";
-import { cilFolder, cilPlus } from "@coreui/icons";
+import { cilFolder, cilGroup, cilPlus } from "@coreui/icons";
 import TableModal from "../../modals/TableModal";
 
 const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
-  // Const for the new table modal
   const [visible, setVisible] = React.useState(false);
 
   return (
@@ -32,15 +31,17 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
         </CSidebarHeader>
         <CSidebarNav>
           <CNavTitle>ToDoList</CNavTitle>
-          <CNavGroup
-            toggler={
-              <>
-                <CIcon customClassName="nav-icon" icon={cilFolder} /> Tableros
-              </>
-            }
-          >
-           {boards && boards.length > 0 ? (
-              boards.map((board, index) => (
+
+          {/* Tableros de los cuales el usuario es dueño */}
+          {boards.owned && boards.owned.length > 0 && (
+            <CNavGroup
+              toggler={
+                <>
+                  <CIcon customClassName="nav-icon" icon={cilFolder} /> Mis tableros
+                </>
+              }
+            >
+              {boards.owned.map((board, index) => (
                 <CNavItem
                   key={index}
                   className="d-flex flex-row align-items-center"
@@ -52,14 +53,36 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
                   </span>{" "}
                   {board.name}
                 </CNavItem>
-              ))
-            ) : (
-              // Mensaje cuando no hay tableros
-              <CNavItem className="text-muted">
-                No hay tableros disponibles.
-              </CNavItem>
-            )}
-          </CNavGroup>
+              ))}
+            </CNavGroup>
+          )}
+
+          {/* Tableros de los cuales el usuario es miembro */}
+          {boards.member && boards.member.length > 0 && (
+            <CNavGroup
+              toggler={
+                <>
+                  <CIcon customClassName="nav-icon" icon={cilGroup} /> Equipos
+                </>
+              }
+            >
+              {boards.member.map((board, index) => (
+                <CNavItem
+                  key={index}
+                  className="d-flex flex-row align-items-center"
+                  href="#"
+                  onClick={() => setSelectedBoard(board)}
+                >
+                  <span className="nav-icon">
+                    <span className="nav-icon-bullet"></span>
+                  </span>{" "}
+                  {board.name}
+                </CNavItem>
+              ))}
+            </CNavGroup>
+          )}
+
+          {/* Botón para agregar un nuevo tablero */}
           <CNavItem href="#" onClick={() => setVisible(true)}>
             <CIcon customClassName="nav-icon" icon={cilPlus} /> Añadir tablero
           </CNavItem>

@@ -3,7 +3,7 @@ const token = localStorage.getItem("token");
 
 export const getTables = async () => {
   try {
-    const response = await fetch(`${API_URL}/tables`, {
+    const response = await fetch(`${API_URL}/alltables`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

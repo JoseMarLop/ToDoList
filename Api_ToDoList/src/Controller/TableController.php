@@ -48,6 +48,19 @@ final class TableController extends AbstractController
                     'created_at' => $task->getCreatedAt(),
                 ];
             }
+
+            // Agregamos el rol 'admin' para las tablas de las cuales es dueño
+            $membersWithRoles = [];
+            foreach ($table->getMembers() as $member) {
+                $user = $member->getUser();
+                if ($user) {
+                    $membersWithRoles[] = [
+                        'email' => $user->getEmail(),
+                        'role' => $member->getRol(), // El rol del miembro
+                    ];
+                }
+            }
+
             $ownerData[] = [
                 'id' => $table->getId(),
                 'name' => $table->getName(),
@@ -55,6 +68,8 @@ final class TableController extends AbstractController
                 'created_at' => $table->getCreatedAt(),
                 'owner' => $user->getId(),
                 'tasks' => $tasks,
+                'user_rol' => 'admin',  // El rol del dueño es siempre 'admin'
+                'members' => $membersWithRoles, // Miembros con sus roles
             ];
         }
 
@@ -71,6 +86,28 @@ final class TableController extends AbstractController
                     'created_at' => $task->getCreatedAt(),
                 ];
             }
+
+            // Obtenemos el rol del usuario en esta tabla
+            $userRole = 'no_role'; // Valor por defecto en caso de que no sea miembro
+            foreach ($table->getMembers() as $member) {
+                if ($member->getUser() === $user) {
+                    $userRole = $member->getRol(); // El rol del usuario en esta tabla
+                    break;
+                }
+            }
+
+            // Agregamos los miembros con sus roles
+            $membersWithRoles = [];
+            foreach ($table->getMembers() as $member) {
+                $user = $member->getUser();
+                if ($user) {
+                    $membersWithRoles[] = [
+                        'email' => $user->getEmail(),
+                        'role' => $member->getRol(), // El rol del miembro
+                    ];
+                }
+            }
+
             $memberData[] = [
                 'id' => $table->getId(),
                 'name' => $table->getName(),
@@ -78,6 +115,8 @@ final class TableController extends AbstractController
                 'created_at' => $table->getCreatedAt(),
                 'owner' => $table->getOwner()->getId(),
                 'tasks' => $tasks,
+                'user_rol' => $userRole, // El rol del usuario en esta tabla
+                'members' => $membersWithRoles, // Miembros con sus roles
             ];
         }
 

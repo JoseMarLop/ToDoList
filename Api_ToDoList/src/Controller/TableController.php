@@ -17,43 +17,6 @@ final class TableController extends AbstractController
 
     public function __construct(private TableRepository $tableRepository) {}
 
-    //Obtain all the tables from an user with its tasks
-    #[Route('/api/tables', name: 'getUserTables', methods: ['GET'])]
-    public function getUserTables(): JsonResponse
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-        $tables = $this->tableRepository->findBy(['owner' => $user]);
-
-        if (empty($tables)) {
-            return new JsonResponse(['message' => 'Tables not found for this User'], JsonResponse::HTTP_NOT_FOUND);
-        }
-
-        $data = [];
-        foreach ($tables as $table) {
-            $tasks = [];
-            foreach ($table->getTasks() as $task) {
-                $tasks[] = [
-                    'id' => $task->getId(),
-                    'title' => $task->getTitle(),
-                    'description' => $task->getDescription(),
-                    'status' => $task->getStatus(),
-                    'created_at' => $task->getCreatedAt(),
-                ];
-            }
-            $data[] = [
-                'id' => $table->getId(),
-                'name' => $table->getName(),
-                'description' => $table->getDescription(),
-                'created_at' => $table->getCreatedAt(),
-                'owner' => $user->getId(),
-                'tasks' => $tasks,
-            ];
-        }
-
-        return new JsonResponse($data, JsonResponse::HTTP_OK);
-    }
-
     #[Route('/api/alltables', name: 'getAllUserTables', methods: ['GET'])]
     public function getAllUserTables(): JsonResponse
     {
@@ -62,7 +25,7 @@ final class TableController extends AbstractController
         if (!$user) {
             return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
-        
+
         $ownerTables = $this->tableRepository->findBy(['owner' => $user]);
 
         // Tablas de las cuales el usuario es miembro
@@ -71,7 +34,7 @@ final class TableController extends AbstractController
             // Aquí obtenemos el tablero desde la entidad miembro
             $memberTables[] = $member->getBoard();
         }
-    
+
         // Preparamos los datos para las tablas de las cuales el usuario es dueño
         $ownerData = [];
         foreach ($ownerTables as $table) {
@@ -94,7 +57,7 @@ final class TableController extends AbstractController
                 'tasks' => $tasks,
             ];
         }
-    
+
         // Preparamos los datos para las tablas de las cuales el usuario es miembro
         $memberData = [];
         foreach ($memberTables as $table) {
@@ -117,13 +80,49 @@ final class TableController extends AbstractController
                 'tasks' => $tasks,
             ];
         }
-    
+
         // Devolvemos los resultados organizados en dos claves: 'owned' y 'member'
         $data = [
             'owned' => $ownerData,
             'member' => $memberData,
         ];
-    
+
+        return new JsonResponse($data, JsonResponse::HTTP_OK);
+    }
+
+    //Get the data from a single table with the members
+    #[Route('/api/getSingleTable/{id}', name: 'getSingleTable', methods: ['GET'])]
+    public function getSingleTable(int $id): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $table = $this->tableRepository->findOneBy(['id' => $id]);
+        if (!$table) {
+            return new JsonResponse(['error' => 'Table not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $members = $table->getMembers();
+
+        $memberEmails = [];
+        foreach ($members as $member) {
+            $user = $member->getUser();
+            if ($user) {
+                $memberEmails[] = $user->getEmail();
+            }
+        }
+
+        $data = [
+            'id' => $table->getId(),
+            'name' => $table->getName(),
+            'description' => $table->getDescription(),
+            'created_at' => $table->getCreatedAt(),
+            'owner' => $table->getOwner()->getEmail(),
+            'members' => $memberEmails,
+        ];
         return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 

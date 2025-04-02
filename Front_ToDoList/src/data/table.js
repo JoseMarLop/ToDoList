@@ -18,6 +18,23 @@ export const getTables = async () => {
   }
 };
 
+export const getSingleTable = async (id) => {
+  try {
+    const response = await fetch(`${API_URL}/getSingleTable/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+
+    return { data };
+  } catch (error) {
+    return { error: error.message || "Something went wrong" };
+  }
+};
+
 export const addTable = async (tableData) => {
   try {
     const response = await fetch(`${API_URL}/newTable`, {
@@ -36,7 +53,7 @@ export const addTable = async (tableData) => {
   }
 };
 
-export const updateTable = async (tableData,id) => {
+export const updateTable = async (tableData, id) => {
   try {
     const response = await fetch(`${API_URL}/updateTable/${id}`, {
       method: "PUT",
@@ -54,17 +71,17 @@ export const updateTable = async (tableData,id) => {
 };
 
 export const deleteTable = async (id) => {
-    try{
-        const response = await fetch(`${API_URL}/deleteTable/${id}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-            },
-        });
-        const data = await response.json();
-        return data;
-    }catch (error) {
-        return { error: error.message || "Something went wrong" };
-    }
-}
+  try {
+    const response = await fetch(`${API_URL}/deleteTable/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return { error: error.message || "Something went wrong" };
+  }
+};

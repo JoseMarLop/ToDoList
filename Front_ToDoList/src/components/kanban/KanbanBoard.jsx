@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { DndContext } from "@dnd-kit/core";
 import Column from "./kanban_components/Column";
 import CIcon from "@coreui/icons-react";
-import { cilPencil, cilPlus } from "@coreui/icons";
+import { cilPencil, cilPlus, cilUser } from "@coreui/icons";
 import TableModal from "../modals/TableModal";
 import TaskModal from "../modals/NewTaskModal";
+import MemberModal from "../modals/MemberModal/MemberModal";
 
 const KanbanBoard = ({ board, refreshBoards }) => {
   const [columns, setColumns] = useState({
@@ -16,6 +17,7 @@ const KanbanBoard = ({ board, refreshBoards }) => {
 
   const [tableModalVisible, setTableModalVisible] = useState(false);
   const [taskModalVisible, setTaskModalVisible] = useState(false);
+  const [memberModalVisible, setMemberModalVisible] = useState(false);
 
   useEffect(() => {
     if (board && board.tasks) {
@@ -55,6 +57,11 @@ const KanbanBoard = ({ board, refreshBoards }) => {
 
   return (
     <>
+      <MemberModal
+        visible={memberModalVisible}
+        setVisible={setMemberModalVisible}
+        board={board}
+      />
       <TableModal
         visible={tableModalVisible}
         setVisible={setTableModalVisible}
@@ -62,7 +69,11 @@ const KanbanBoard = ({ board, refreshBoards }) => {
         mode="edit"
         refreshBoards={refreshBoards}
       />
-      <TaskModal visible={taskModalVisible} setVisible={setTaskModalVisible} board={board}/>
+      <TaskModal
+        visible={taskModalVisible}
+        setVisible={setTaskModalVisible}
+        board={board}
+      />
       <DndContext onDragEnd={handleDragEnd}>
         <div className="d-flex flex-row align-items-center">
           <h2>{board.name}</h2>
@@ -75,6 +86,14 @@ const KanbanBoard = ({ board, refreshBoards }) => {
           />
         </div>
         <p>{board.description}</p>
+        <div
+          className="d-flex flex-row align-items-center gap-2 mb-3"
+          style={{ cursor: "pointer" }}
+          onClick={() => setMemberModalVisible(true)}
+        >
+          <CIcon icon={cilUser} size="lg" />
+          <span>Miembros</span>
+        </div>
         <div
           className="d-flex flex-row align-items-center gap-2 mb-3"
           style={{ cursor: "pointer" }}

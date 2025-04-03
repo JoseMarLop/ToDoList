@@ -77,13 +77,17 @@ const KanbanBoard = ({ board, refreshBoards }) => {
       <DndContext onDragEnd={handleDragEnd}>
         <div className="d-flex flex-row align-items-center">
           <h2>{board.name}</h2>
-          <CIcon
-            icon={cilPencil}
-            className="ms-3"
-            size="lg"
-            style={{ cursor: "pointer" }}
-            onClick={() => setTableModalVisible(true)}
-          />
+          {board.user_rol === "admin" ? (
+            <CIcon
+              icon={cilPencil}
+              className="ms-3"
+              size="lg"
+              style={{ cursor: "pointer" }}
+              onClick={() => setTableModalVisible(true)}
+            />
+          ) : (
+            <></>
+          )}
         </div>
         <p>{board.description}</p>
         <div
@@ -101,6 +105,9 @@ const KanbanBoard = ({ board, refreshBoards }) => {
         >
           <CIcon icon={cilPlus} size="lg" />
           <span>Añadir tarea</span>
+        </div>
+        <div>
+          <span>{board.user_rol}</span>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>
           {Object.keys(columns).map((col) => (

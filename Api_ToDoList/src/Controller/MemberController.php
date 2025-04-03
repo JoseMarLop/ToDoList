@@ -19,27 +19,27 @@ final class MemberController extends AbstractController
     public function __construct(private TableRepository $tableRepository, private UserRepository $userRepository) {}
 
     // Get all members of a table
-    #[Route('/api/members/{table_id}', name: 'getMembers', methods: ['GET'])]
-    public function getMembers(int $table_id): JsonResponse
-    {
-        $table = $this->tableRepository->findOneBy(['id' => $table_id]);
-        if (!$table) {
-            return new JsonResponse(['error' => 'Table not found'], Response::HTTP_NOT_FOUND);
-        }
+    // #[Route('/api/members/{table_id}', name: 'getMembers', methods: ['GET'])]
+    // public function getMembers(int $table_id): JsonResponse
+    // {
+    //     $table = $this->tableRepository->findOneBy(['id' => $table_id]);
+    //     if (!$table) {
+    //         return new JsonResponse(['error' => 'Table not found'], Response::HTTP_NOT_FOUND);
+    //     }
 
-        $members = $table->getMembers();
+    //     $members = $table->getMembers();
 
-        $data = [];
-        foreach ($members as $member) {
-            $data[] = [
-                'id' => $member->getId(),
-                'user_id' => $member->getUser()->getId(),
-                'rol' => $member->getRol(),
-            ];
-        }
+    //     $data = [];
+    //     foreach ($members as $member) {
+    //         $data[] = [
+    //             'id' => $member->getId(),
+    //             'user_id' => $member->getUser()->getId(),
+    //             'rol' => $member->getRol(),
+    //         ];
+    //     }
 
-        return new JsonResponse($data, Response::HTTP_OK);
-    }
+    //     return new JsonResponse($data, Response::HTTP_OK);
+    // }
 
     //Add member
     #[Route('/api/addMember/{table_id}', name: 'addMember', methods: ['POST'])]

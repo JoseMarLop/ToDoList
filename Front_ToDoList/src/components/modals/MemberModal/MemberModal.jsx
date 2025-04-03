@@ -5,29 +5,45 @@ import {
   CModalHeader,
   CModalTitle,
 } from "@coreui/react";
-import { useEffect, useState } from "react";
-import { getSingleTable } from "../../../data/table";
+import { useState } from "react";
 import CIcon from "@coreui/icons-react";
-import { cilPlant, cilPlus } from "@coreui/icons";
+import { cilPlus } from "@coreui/icons";
+import { addMember } from "../../../data/member";
 
 const MemberModal = ({ visible, setVisible, board }) => {
-  // const [tableData, setTable] = useState(null);
-
-  // useEffect(() => {
-  //   if (board?.id) {
-  //     const handleTable = async () => {
-  //       const result = await getSingleTable(board.id);
-  //       if (result.error) {
-  //         alert(result.error);
-  //       } else {
-  //         setTable(result.data);
-  //       }
-  //     };
-  //     handleTable();
-  //   }
-  // }, [board?.id, visible]);
-
   const [addingMember, setAddingMember] = useState(false);
+  const [memberEmail, setMemberEmail] = useState("");
+  const [error, setError] = useState(null);
+
+  const handleEmailChange = (e) => {
+    setMemberEmail(e.target.value);
+    setError(null);
+  };
+
+  const handleAddMember = async (e) => {
+    e.preventDefault();
+    if (memberEmail.trim() === "") {
+      setError("El correo electrónico no puede estar vacío");
+      return;
+    }
+    const result = await addMember(board.id, { email: memberEmail });
+    if (result.data.error) {
+      setError(result.data.error);
+      return;
+    } else {
+      alert("Miembro añadido correctamente");
+      setAddingMember(false);
+      setMemberEmail("");
+    }
+  };
+
+  // Maneja la tecla Enter
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleAddMember(e);
+    }
+  };
+
   return (
     <CModal
       alignment="center"
@@ -63,7 +79,18 @@ const MemberModal = ({ visible, setVisible, board }) => {
                 <>
                   {addingMember ? (
                     <div>
-                      <CFormInput onBlur={() => setAddingMember(false)} />
+                      <CFormInput
+                        value={memberEmail}
+                        onChange={handleEmailChange}
+                        onBlur={() => setAddingMember(false)}
+                        onKeyDown={handleKeyDown} // Aquí se captura el evento de la tecla Enter
+                      />
+                      {error && (
+                        <div style={{ color: "red", fontSize: "12px" }}>
+                          {error}
+                        </div>
+                      )}{" "}
+                      {/* Mensaje de error */}
                     </div>
                   ) : (
                     <div

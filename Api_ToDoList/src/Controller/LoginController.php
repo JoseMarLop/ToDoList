@@ -57,7 +57,6 @@ final class LoginController extends AbstractController
         // Create response data
         $responseData = [
             'token' => $token,
-            'roles' => $user->getRoles(),
             'email' => $user->getEmail()   
         ];
 

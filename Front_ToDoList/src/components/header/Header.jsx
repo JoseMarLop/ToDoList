@@ -30,7 +30,7 @@ import { useTranslation } from "react-i18next";
 
 import styles from "./Header.module.scss";
 
-import { isAuthenticated,logout } from "../../data/auth";
+import { isAuthenticated, logout } from "../../data/auth";
 
 const Header = () => {
   const { t } = useTranslation();
@@ -47,6 +47,8 @@ const Header = () => {
     i18n.changeLanguage(lang);
     setSelectedLanguage(lang === "es" ? spanish : english);
   };
+
+  const email = localStorage.getItem("email");
 
   useEffect(() => {
     window.addEventListener("popstate", () => {
@@ -81,9 +83,18 @@ const Header = () => {
             </CDropdownToggle>
             <CDropdownMenu>
               {authenticated ? (
-                <CDropdownItem as="button" type="button" onClick={() => logout()}>
-                  <CIcon icon={cilLockLocked} /> Log out
-                </CDropdownItem>
+                <>
+                  <CDropdownItem
+                    as="button"
+                    type="button"
+                    onClick={() => logout()}
+                  >
+                    <CIcon icon={cilLockLocked} /> Log out
+                  </CDropdownItem>
+                  <CDropdownItem>
+                    <CIcon icon={cilUser} /> {email}
+                  </CDropdownItem>
+                </>
               ) : (
                 <>
                   <CDropdownItem as={NavLink} to="/register">

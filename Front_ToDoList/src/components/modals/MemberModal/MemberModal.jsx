@@ -58,7 +58,7 @@ const MemberModal = ({ visible, setVisible, board }) => {
           <div>Cargando...</div>
         ) : (
           <>
-            <section className="w-25">
+            <section className="w-50">
               <p>
                 <strong>Propietario:</strong> {board.owner}
               </p>
@@ -74,7 +74,7 @@ const MemberModal = ({ visible, setVisible, board }) => {
                 )}
               </ul>
             </section>
-            <section className="d-flex flex-column align-items-end w-75">
+            <section className="d-flex flex-column align-items-end w-50">
               {board.user_rol === "admin" && (
                 <>
                   {addingMember ? (

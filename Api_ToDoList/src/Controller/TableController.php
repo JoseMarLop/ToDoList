@@ -66,7 +66,7 @@ final class TableController extends AbstractController
                 'name' => $table->getName(),
                 'description' => $table->getDescription(),
                 'created_at' => $table->getCreatedAt(),
-                'owner' => $user->getEmail(),
+                'owner' => $table->getOwner()->getEmail(),
                 'tasks' => $tasks,
                 'user_rol' => 'admin',  // El rol del dueño es siempre 'admin'
                 'members' => $membersWithRoles, // Miembros con sus roles
@@ -115,8 +115,8 @@ final class TableController extends AbstractController
                 'created_at' => $table->getCreatedAt(),
                 'owner' => $table->getOwner()->getEmail(),
                 'tasks' => $tasks,
-                'user_rol' => $userRole, // El rol del usuario en esta tabla
-                'members' => $membersWithRoles, // Miembros con sus roles
+                'user_rol' => $userRole, 
+                'members' => $membersWithRoles, 
             ];
         }
 

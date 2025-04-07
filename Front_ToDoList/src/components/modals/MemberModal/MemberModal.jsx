@@ -1,5 +1,6 @@
 import {
   CFormInput,
+  CFormSwitch,
   CModal,
   CModalBody,
   CModalHeader,
@@ -7,8 +8,8 @@ import {
 } from "@coreui/react";
 import { useState } from "react";
 import CIcon from "@coreui/icons-react";
-import { cilPlus } from "@coreui/icons";
-import { addMember } from "../../../data/member";
+import { cibSuperuser, cilPlus } from "@coreui/icons";
+import { addMember, updateMember } from "../../../data/member";
 
 const MemberModal = ({ visible, setVisible, board }) => {
   const [addingMember, setAddingMember] = useState(false);
@@ -44,6 +45,16 @@ const MemberModal = ({ visible, setVisible, board }) => {
     }
   };
 
+  const handleRoleChange = async (tableId, userId) => {
+    const result = await updateMember(tableId, userId);
+
+    if (result.error) {
+      alert(result.error);
+    } else {
+      alert(`El rol del miembro ha sido cambiado`);
+    }
+  };
+
   return (
     <CModal
       alignment="center"
@@ -64,15 +75,35 @@ const MemberModal = ({ visible, setVisible, board }) => {
               </p>
 
               <h5>Miembros:</h5>
-              <ul>
+              <div className="d-flex flex-row align-items-center my-2">
+                <CIcon icon={cibSuperuser} />
+                <span>&#8594;</span> Admin
+              </div>
+              <div className="d-flex flex-column">
                 {board.members && board.members.length > 0 ? (
                   board.members.map((member, index) => (
-                    <li key={index}>{member.email}</li>
+                    <div
+                      key={index}
+                      className="d-flex flex-row align-items-center justify-content-between"
+                    >
+                      <div>
+                        <span>{member.email}</span>
+                      </div>
+                      <div>
+                        <div className="d-flex flex-row align-items-center">
+                          <CFormSwitch
+                            checked={member.role === "admin"}
+                            onChange={() => handleRoleChange(board.id, member.id)}
+                          />
+                          <CIcon icon={cibSuperuser} />
+                        </div>
+                      </div>
+                    </div>
                   ))
                 ) : (
-                  <li>No hay miembros</li>
+                  <span>No hay miembros</span>
                 )}
-              </ul>
+              </div>
             </section>
             <section className="d-flex flex-column align-items-end w-50">
               {board.user_rol === "admin" && (

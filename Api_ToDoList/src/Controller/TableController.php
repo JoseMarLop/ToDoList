@@ -128,41 +128,41 @@ final class TableController extends AbstractController
         return new JsonResponse($data, JsonResponse::HTTP_OK);
     }
 
-    //Get the data from a single table with the members
-    #[Route('/api/getSingleTable/{id}', name: 'getSingleTable', methods: ['GET'])]
-    public function getSingleTable(int $id): JsonResponse
-    {
-        /** @var User $user */
-        $user = $this->getUser();
-        if (!$user) {
-            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
-        }
+    // //Get the data from a single table with the members
+    // #[Route('/api/getSingleTable/{id}', name: 'getSingleTable', methods: ['GET'])]
+    // public function getSingleTable(int $id): JsonResponse
+    // {
+    //     /** @var User $user */
+    //     $user = $this->getUser();
+    //     if (!$user) {
+    //         return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+    //     }
 
-        $table = $this->tableRepository->findOneBy(['id' => $id]);
-        if (!$table) {
-            return new JsonResponse(['error' => 'Table not found'], Response::HTTP_NOT_FOUND);
-        }
+    //     $table = $this->tableRepository->findOneBy(['id' => $id]);
+    //     if (!$table) {
+    //         return new JsonResponse(['error' => 'Table not found'], Response::HTTP_NOT_FOUND);
+    //     }
 
-        $members = $table->getMembers();
+    //     $members = $table->getMembers();
 
-        $memberEmails = [];
-        foreach ($members as $member) {
-            $user = $member->getUser();
-            if ($user) {
-                $memberEmails[] = $user->getEmail();
-            }
-        }
+    //     $memberEmails = [];
+    //     foreach ($members as $member) {
+    //         $user = $member->getUser();
+    //         if ($user) {
+    //             $memberEmails[] = $user->getEmail();
+    //         }
+    //     }
 
-        $data = [
-            'id' => $table->getId(),
-            'name' => $table->getName(),
-            'description' => $table->getDescription(),
-            'created_at' => $table->getCreatedAt(),
-            'owner' => $table->getOwner()->getEmail(),
-            'members' => $memberEmails,
-        ];
-        return new JsonResponse($data, JsonResponse::HTTP_OK);
-    }
+    //     $data = [
+    //         'id' => $table->getId(),
+    //         'name' => $table->getName(),
+    //         'description' => $table->getDescription(),
+    //         'created_at' => $table->getCreatedAt(),
+    //         'owner' => $table->getOwner()->getEmail(),
+    //         'members' => $memberEmails,
+    //     ];
+    //     return new JsonResponse($data, JsonResponse::HTTP_OK);
+    // }
 
     //Create a new table for the logged user
     #[Route('/api/newTable', name: 'addTable', methods: ['POST'])]

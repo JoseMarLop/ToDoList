@@ -63,6 +63,10 @@ final class MemberController extends AbstractController
             return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
 
+        if ($user->getEmail() === $table->getOwner()->getEmail()) {
+            return new JsonResponse(['error' => 'The owner cannot be added'], Response::HTTP_BAD_REQUEST);
+        }
+
         $existingMember = $entityManager->getRepository(Member::class)->findOneBy([
             'user' => $user,
             'board' => $table
@@ -71,6 +75,7 @@ final class MemberController extends AbstractController
         if ($existingMember) {
             return new JsonResponse(['error' => 'User is already a member of this table'], Response::HTTP_CONFLICT);
         }
+
 
         $member = new Member();
         $member->setUser($user);

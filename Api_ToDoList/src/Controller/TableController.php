@@ -48,10 +48,10 @@ final class TableController extends AbstractController
 
             $membersWithRoles = [];
             foreach ($table->getMembers() as $member) {
-                $user = $member->getUser();
-                if ($user) {
+                $userMember = $member->getUser();
+                if ($userMember) {
                     $membersWithRoles[] = [
-                        'email' => $user->getEmail(),
+                        'email' => $userMember->getEmail(),
                         'role' => $member->getRol(),
                     ];
                 }
@@ -86,7 +86,7 @@ final class TableController extends AbstractController
 
             $userRole = 'no_role';
             foreach ($table->getMembers() as $member) {
-                if ($member->getUser() ==  $user) {
+                if ($member->getUser()->getId() === $user->getId()) {
                     $userRole = $member->getRol();
                     break;
                 }
@@ -94,10 +94,10 @@ final class TableController extends AbstractController
 
             $membersWithRoles = [];
             foreach ($table->getMembers() as $member) {
-                $user = $member->getUser();
-                if ($user) {
+                $userMember = $member->getUser();
+                if ($userMember) {
                     $membersWithRoles[] = [
-                        'email' => $user->getEmail(),
+                        'email' => $userMember->getEmail(),
                         'role' => $member->getRol(),
                     ];
                 }

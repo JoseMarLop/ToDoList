@@ -217,4 +217,26 @@ final class TaskController extends AbstractController
         return new JsonResponse(['message' => 'Subtask deleted successfully'], JsonResponse::HTTP_OK);
     }
 
+    #[Route('/api/changeTaskStatus/{id}', name: 'changeTaskStatus', methods: ['PUT'])]
+    public function changeTaskStatus(EntityManagerInterface $entityManager, Request $request,int $id): JsonResponse{
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        $task = $this->taskRepository->findOneBy(['id' => $id]);
+        if (!$task) {
+            return new JsonResponse(['error' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $task->setStatus($data['status']);
+        $entityManager->persist($task);
+        $entityManager->flush();
+        return new JsonResponse(['message' => 'Task status updated'], JsonResponse::HTTP_OK);
+    }
+
+
 }

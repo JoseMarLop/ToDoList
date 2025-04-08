@@ -74,7 +74,7 @@ final class MemberController extends AbstractController
     }
 
     //Update rol
-    #[Route('/api/updateMember/{table_id}/{user_id}', name: 'addMember', methods: ['PUT'])]
+    #[Route('/api/updateMember/{table_id}/{user_id}', name: 'updateMember', methods: ['PUT'])]
     public function updateMember(int $table_id, int $user_id, EntityManagerInterface $entityManager): JsonResponse
     {
         $table = $this->tableRepository->findOneBy(['id' => $table_id]);
@@ -112,11 +112,18 @@ final class MemberController extends AbstractController
     #[Route('/api/deleteMember/{member_id}', name: 'deleteMember', methods: ['DELETE'])]
     public function deleteMember(EntityManagerInterface $entityManager, int $member_id): JsonResponse
     {
-        $member = $entityManager->getRepository(Member::class)->find($member_id);
+        $member = $entityManager->getRepository(Member::class)->findOneBy(['id' => $member_id]);
         if (!$member) {
             return new JsonResponse(['error' => 'Member not found'], Response::HTTP_NOT_FOUND);
         }
 
+        $user = $member->getUser();
+        $table = $member->getBoard();
+
+        $user->removeMemberTable($member);
+        $table->removeMember($member);
+        $entityManager->persist($user);
+        $entityManager->persist($table);
         $entityManager->remove($member);
         $entityManager->flush();
 

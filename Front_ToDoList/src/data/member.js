@@ -35,3 +35,20 @@ export const updateMember = async (tableId, userId) => {
     return { error: error.message || "Something went wrong" };
   }
 };
+
+export const deleteMember = async (memberId) => {
+  try {
+    const response = await fetch(`${API_URL}/deleteMember/${memberId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+
+    return { data };
+  } catch (error) {
+    return { error: error.message || "Something went wrong" };
+  }
+};

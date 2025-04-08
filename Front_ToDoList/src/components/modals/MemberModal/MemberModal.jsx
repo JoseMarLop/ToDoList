@@ -5,13 +5,14 @@ import {
   CModalBody,
   CModalHeader,
   CModalTitle,
+  CPopover,
 } from "@coreui/react";
 import { useState } from "react";
 import CIcon from "@coreui/icons-react";
-import { cibSuperuser, cilPlus } from "@coreui/icons";
-import { addMember, updateMember } from "../../../data/member";
+import { cibSuperuser, cilPlus, cilTrash } from "@coreui/icons";
+import { addMember, deleteMember, updateMember } from "../../../data/member";
 
-const MemberModal = ({ visible, setVisible, board ,refreshBoards}) => {
+const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
   const [addingMember, setAddingMember] = useState(false);
   const [memberEmail, setMemberEmail] = useState("");
   const [error, setError] = useState(null);
@@ -28,12 +29,12 @@ const MemberModal = ({ visible, setVisible, board ,refreshBoards}) => {
       return;
     }
     const result = await addMember(board.id, { email: memberEmail });
-    if (result.data.error) {
-      setError(result.data.error);
+    if (result.error) {
+      setError(result.error);
       return;
     } else {
-      alert("Miembro añadido correctamente");
       setAddingMember(false);
+      refreshBoards();
       setMemberEmail("");
     }
   };
@@ -51,7 +52,16 @@ const MemberModal = ({ visible, setVisible, board ,refreshBoards}) => {
     if (result.error) {
       alert(result.error);
     } else {
-      // alert(`El rol del miembro ha sido cambiado`);
+      refreshBoards();
+    }
+  };
+
+  const handleDeleteMember = async (memberId) => {
+    const result = await deleteMember(memberId);
+
+    if (result.error) {
+      alert(result.error);
+    } else {
       refreshBoards();
     }
   };
@@ -87,9 +97,27 @@ const MemberModal = ({ visible, setVisible, board ,refreshBoards}) => {
                       key={index}
                       className="d-flex flex-row align-items-center justify-content-between"
                     >
-                      <div>
-                        <span>{member.email}</span>
-                      </div>
+                      <CPopover
+                        content={
+                          <div
+                            className="d-flex flex-row align-items-center"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleDeleteMember(member.member_id)}
+                          >
+                            <span>Expulsar</span>
+                            <CIcon
+                              icon={cilTrash}
+                              style={{ color: "red" }}
+                              className="ms-2"
+                            />
+                          </div>
+                        }
+                        placement="top"
+                      >
+                        <div style={{ cursor: "pointer" }}>
+                          <span>{member.email}</span>
+                        </div>
+                      </CPopover>
                       <div>
                         <div className="d-flex flex-row align-items-center">
                           <CFormSwitch

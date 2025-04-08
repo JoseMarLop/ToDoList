@@ -54,6 +54,7 @@ final class TableController extends AbstractController
                         'email' => $userMember->getEmail(),
                         'role' => $member->getRol(),
                         'id' => $userMember->getId(),
+                        'member_id' => $member->getId()
                     ];
                 }
             }
@@ -101,6 +102,7 @@ final class TableController extends AbstractController
                         'email' => $userMember->getEmail(),
                         'role' => $member->getRol(),
                         'id' => $userMember->getId(),
+                        'member_id' => $member->getId()
                     ];
                 }
             }

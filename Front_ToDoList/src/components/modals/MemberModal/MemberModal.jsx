@@ -29,8 +29,8 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
       return;
     }
     const result = await addMember(board.id, { email: memberEmail });
-    if (result.error) {
-      setError(result.error);
+    if (result.data.error) {
+      setError(result.data.error);
       return;
     } else {
       setAddingMember(false);

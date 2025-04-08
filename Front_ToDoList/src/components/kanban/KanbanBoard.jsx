@@ -61,6 +61,7 @@ const KanbanBoard = ({ board, refreshBoards }) => {
         visible={memberModalVisible}
         setVisible={setMemberModalVisible}
         board={board}
+        refreshBoards={refreshBoards}
       />
       <TableModal
         visible={tableModalVisible}

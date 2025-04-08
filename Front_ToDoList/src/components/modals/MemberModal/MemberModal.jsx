@@ -11,7 +11,7 @@ import CIcon from "@coreui/icons-react";
 import { cibSuperuser, cilPlus } from "@coreui/icons";
 import { addMember, updateMember } from "../../../data/member";
 
-const MemberModal = ({ visible, setVisible, board }) => {
+const MemberModal = ({ visible, setVisible, board ,refreshBoards}) => {
   const [addingMember, setAddingMember] = useState(false);
   const [memberEmail, setMemberEmail] = useState("");
   const [error, setError] = useState(null);
@@ -51,7 +51,8 @@ const MemberModal = ({ visible, setVisible, board }) => {
     if (result.error) {
       alert(result.error);
     } else {
-      alert(`El rol del miembro ha sido cambiado`);
+      // alert(`El rol del miembro ha sido cambiado`);
+      refreshBoards();
     }
   };
 
@@ -93,7 +94,9 @@ const MemberModal = ({ visible, setVisible, board }) => {
                         <div className="d-flex flex-row align-items-center">
                           <CFormSwitch
                             checked={member.role === "admin"}
-                            onChange={() => handleRoleChange(board.id, member.id)}
+                            onChange={() =>
+                              handleRoleChange(board.id, member.id)
+                            }
                           />
                           <CIcon icon={cibSuperuser} />
                         </div>

@@ -4,7 +4,7 @@ import Column from "./kanban_components/Column";
 import CIcon from "@coreui/icons-react";
 import { cilPencil, cilPlus, cilUser } from "@coreui/icons";
 import TableModal from "../modals/TableModal";
-import TaskModal from "../modals/NewTaskModal";
+import NewTaskModal from "../modals/NewTaskModal";
 import MemberModal from "../modals/MemberModal/MemberModal";
 
 const KanbanBoard = ({ board, refreshBoards }) => {
@@ -70,10 +70,11 @@ const KanbanBoard = ({ board, refreshBoards }) => {
         mode="edit"
         refreshBoards={refreshBoards}
       />
-      <TaskModal
+      <NewTaskModal
         visible={taskModalVisible}
         setVisible={setTaskModalVisible}
         board={board}
+        refreshBoards={refreshBoards}
       />
       <DndContext onDragEnd={handleDragEnd}>
         <div className="d-flex flex-row align-items-center">

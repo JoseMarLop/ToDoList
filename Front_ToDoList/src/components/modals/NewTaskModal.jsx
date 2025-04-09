@@ -21,7 +21,7 @@ import {
   FcMediumPriority,
 } from "react-icons/fc";
 
-const NewTaskModal = ({ visible, setVisible, board }) => {
+const NewTaskModal = ({ visible, setVisible, board , refreshBoards}) => {
   const [taskData, setTaskData] = useState({
     title: "",
     description: "",
@@ -56,7 +56,7 @@ const NewTaskModal = ({ visible, setVisible, board }) => {
       alert(result.error);
       return;
     } else {
-      alert("Tarea añadida correctamente");
+      refreshBoards();
       setVisible(false);
     }
   };

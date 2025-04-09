@@ -118,3 +118,20 @@ export const deleteSubtask = async (subtaskId) => {
     return { error: error.message || "Something went wrong" };
   }
 };
+
+export const changeTaskStatus = async (taskId, status) => {
+  try {
+    const response = await fetch(`${API_URL}/changeTaskStatus/${taskId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({status}),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return { error: error.message || "Something went wrong" };
+  }
+};

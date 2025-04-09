@@ -6,6 +6,7 @@ import { cilPencil, cilPlus, cilUser } from "@coreui/icons";
 import TableModal from "../modals/TableModal";
 import NewTaskModal from "../modals/NewTaskModal";
 import MemberModal from "../modals/MemberModal/MemberModal";
+import { changeTaskStatus } from "../../data/task";
 
 const KanbanBoard = ({ board, refreshBoards }) => {
   const [columns, setColumns] = useState({
@@ -52,6 +53,20 @@ const KanbanBoard = ({ board, refreshBoards }) => {
         { ...task, status: toColumn },
       ];
       return newColumns;
+    });
+
+    changeTaskStatus(task.id, toColumn)
+    .then((data) => {
+      if (data.error) {
+        console.error("Error al actualizar el estado de la tarea", data.error);
+        // Si hay un error, podrías revertir la actualización del frontend
+      } else {
+        console.log("Tarea actualizada correctamente", data.message);
+      }
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud de cambio de estado", error);
+      // Si ocurre un error, también podrías revertir la actualización del frontend
     });
   }
 

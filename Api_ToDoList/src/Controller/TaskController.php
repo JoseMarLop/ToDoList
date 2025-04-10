@@ -15,11 +15,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Task;
 use App\Entity\Subtask;
 use App\Entity\Comment;
+use App\Repository\CommentRepository;
 
 final class TaskController extends AbstractController
 {
 
-    public function __construct(private TaskRepository $taskRepository, private TableRepository $tableRepository, private SubtaskRepository $subtaskRepository) {}
+    public function __construct(private TaskRepository $taskRepository, private TableRepository $tableRepository, private SubtaskRepository $subtaskRepository, private CommentRepository $commentRepository) {}
 
     //Obtain a task with its subtasks
     #[Route('/api/task/{id}', name: 'getTask', methods: ['GET'])]
@@ -309,4 +310,34 @@ final class TaskController extends AbstractController
 
         return new JsonResponse(['message' => 'Comment added'], JsonResponse::HTTP_OK);
     }
+
+    #[Route('/api/deleteComment/{comment_id}', name: 'deleteComment', methods: ['DELETE'])]
+    public function deleteComment(int $comment_id, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $comment = $this->commentRepository->findOneBy(["id" => $comment_id]);
+        if (!$comment) {
+            return new JsonResponse(['error' => 'Comment not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $task = $comment->getTask();
+        if (!$task) {
+            return new JsonResponse(['error' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $userComment = $comment->getUser();
+
+        $task->removeComment($comment);
+        $userComment->removeComment($comment);
+        $entityManager->remove($comment);
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Comment deleted'], JsonResponse::HTTP_OK);
+    }
+
 }

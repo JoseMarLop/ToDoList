@@ -1,8 +1,15 @@
-import { cilSpeech, cilUser } from "@coreui/icons";
+import { cilPencil, cilSpeech, cilTrash, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
-import { CFormInput } from "@coreui/react";
+import {
+  CButton,
+  CFormInput,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CPopover,
+} from "@coreui/react";
 import styles from "./TaskModal.module.scss";
-import { getComments,addComment } from "../../../data/comment";
+import { getComments, addComment, deleteComment } from "../../../data/comment";
 import { useEffect, useState } from "react";
 
 const Comments = ({ fullTask }) => {
@@ -27,19 +34,32 @@ const Comments = ({ fullTask }) => {
 
   const handleKeyDown = async (e) => {
     if (e.key === "Enter" && content.trim() && fullTask?.id) {
-      e.preventDefault(); // evita el comportamiento por defecto del enter en formularios
+      e.preventDefault();
       setLoading(true);
 
       const result = await addComment(fullTask.id, content.trim());
 
       if (!result.error) {
         setContent("");
-        await fetchComments(); // Recarga los comentarios
+        await fetchComments();
       } else {
         console.error("Error al añadir comentario:", result.error);
       }
 
       setLoading(false);
+    }
+  };
+
+  const [showModal, setShowModal] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState(null);
+
+  const handleDeleteComment = async (commentId) => {
+    const result = await deleteComment(commentId);
+
+    if (!result.error) {
+      await fetchComments();
+    } else {
+      alert("Error al eliminar comentario:", result.error);
     }
   };
 
@@ -67,15 +87,12 @@ const Comments = ({ fullTask }) => {
       {/* Render comments */}
       <div className="mt-3">
         {comments.map((comment, index) => (
-          <div
-            key={index}
-            className="mb-2 d-flex flex-row align-items-center"
-          >
+          <div key={index} className="mb-4 d-flex flex-row align-items-center">
             <div>
               <CIcon icon={cilUser} size="xl" />
             </div>
             <div className="ms-3">
-              <div className="d-flex flex-column">
+              <div className="d-flex flex-column" style={{ cursor: "pointer" }}>
                 <div className="d-flex flex-row align-items-center gap-2">
                   <span style={{ color: "gray", fontSize: "14px" }}>
                     {comment.user}
@@ -84,12 +101,51 @@ const Comments = ({ fullTask }) => {
                     {formatDate(comment.created_at.date)}
                   </span>
                 </div>
-                <p>{comment.content}</p>
+                <span>{comment.content}</span>
+                <CIcon
+                  icon={cilTrash}
+                  className="mt-1"
+                  style={{ cursor: "pointer", color: "gray" }}
+                  onClick={() => {
+                    setCommentToDelete(comment.id); // o comment.comment_id si tiene otro nombre
+                    setShowModal(true);
+                  }}
+                />
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Delete comment modal */}
+
+      <CModal visible={showModal} onClose={() => setShowModal(false)}>
+        <CModalBody>
+          ¿Estás seguro de que quieres eliminar este comentario?
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setShowModal(false)}>
+            Cancelar
+          </CButton>
+          <CButton
+            color="danger"
+            onClick={async () => {
+              if (commentToDelete) {
+                const result = await deleteComment(commentToDelete);
+                if (!result.error) {
+                  await fetchComments();
+                } else {
+                  alert("Error al eliminar comentario:", result.error);
+                }
+              }
+              setShowModal(false);
+              setCommentToDelete(null);
+            }}
+          >
+            Eliminar
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   );
 };

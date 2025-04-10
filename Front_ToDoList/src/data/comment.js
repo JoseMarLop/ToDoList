@@ -17,7 +17,7 @@ export const getComments = async (taskId) => {
   }
 };
 
-export const addComment = async (taskId,content) => {
+export const addComment = async (taskId, content) => {
   try {
     const response = await fetch(`${API_URL}/newComments/${taskId}`, {
       headers: {
@@ -26,6 +26,23 @@ export const addComment = async (taskId,content) => {
       },
       body: JSON.stringify({ content }),
       method: "POST",
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return { error: error.message || "Something went wrong" };
+  }
+};
+
+export const deleteComment = async (commentId) => {
+  try {
+    const response = await fetch(`${API_URL}/deleteComment/${commentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      method: "DELETE",
     });
 
     const data = await response.json();

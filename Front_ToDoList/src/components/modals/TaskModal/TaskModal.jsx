@@ -12,11 +12,7 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { useEffect, useState } from "react";
-import {
-  getTask,
-  updateTask,
-  deleteTask
-} from "../../../data/task";
+import { getTask, updateTask, deleteTask } from "../../../data/task";
 import CIcon from "@coreui/icons-react";
 import {
   cilDescription,
@@ -33,6 +29,7 @@ import {
 } from "react-icons/fc";
 
 import Subtasks from "./Subtasks";
+import Comments from "./Comments";
 
 const TaskModal = ({ visible, setVisible, task }) => {
   // State variables for task details
@@ -245,16 +242,7 @@ const TaskModal = ({ visible, setVisible, task }) => {
                 <Subtasks fullTask={fullTask} />
 
                 {/* Comments */}
-                <div
-                  className={`${styles.comments_div} d-flex align-items-center gap-2 mb-3`}
-                >
-                  <CIcon icon={cilSpeech} size="xl" />
-                  <span>Comments</span>
-                </div>
-                <div className="d-flex align-items-center gap-3">
-                  <div className={styles.user_icon}>@</div>
-                  <CFormInput className={styles.task_description_area} />
-                </div>
+                <Comments fullTask={fullTask} />
               </div>
             </section>
 

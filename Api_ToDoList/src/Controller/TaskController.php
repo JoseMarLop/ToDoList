@@ -14,11 +14,12 @@ use App\Repository\SubtaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Task;
 use App\Entity\Subtask;
+use App\Entity\Comment;
 
 final class TaskController extends AbstractController
 {
 
-    public function __construct(private TaskRepository $taskRepository, private TableRepository $tableRepository,private SubtaskRepository $subtaskRepository) {}
+    public function __construct(private TaskRepository $taskRepository, private TableRepository $tableRepository, private SubtaskRepository $subtaskRepository) {}
 
     //Obtain a task with its subtasks
     #[Route('/api/task/{id}', name: 'getTask', methods: ['GET'])]
@@ -29,7 +30,7 @@ final class TaskController extends AbstractController
         if (empty($task)) {
             return new JsonResponse(['message' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
         }
-        
+
         $data = [
             'id' => $task->getId(),
             'title' => $task->getTitle(),
@@ -129,17 +130,18 @@ final class TaskController extends AbstractController
     }
 
     #[Route('/api/subtask/{task_id}', name: 'getSubTask', methods: ['GET'])]
-    public function getSubtasks(int $task_id): JsonResponse{
-         /** @var User $user */
-         $user = $this->getUser();
-         if (!$user) {
-             return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
-         }
+    public function getSubtasks(int $task_id): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
 
-         $task = $this->taskRepository->findOneBy(["id" => $task_id]);
-         if (!$task) {
-             return new JsonResponse(['error' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
-         }
+        $task = $this->taskRepository->findOneBy(["id" => $task_id]);
+        if (!$task) {
+            return new JsonResponse(['error' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
 
         $subtasks = [];
         foreach ($task->getSubtasks() as $subtask) {
@@ -218,7 +220,8 @@ final class TaskController extends AbstractController
     }
 
     #[Route('/api/changeTaskStatus/{id}', name: 'changeTaskStatus', methods: ['PUT'])]
-    public function changeTaskStatus(EntityManagerInterface $entityManager, Request $request,int $id): JsonResponse{
+    public function changeTaskStatus(EntityManagerInterface $entityManager, Request $request, int $id): JsonResponse
+    {
         /** @var User $user */
         $user = $this->getUser();
         if (!$user) {
@@ -239,4 +242,71 @@ final class TaskController extends AbstractController
     }
 
 
+    #[Route('/api/comments/{task_id}', name: 'getTaskComments', methods: ['GET'])]
+    public function getComments(int $task_id): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $task = $this->taskRepository->findOneBy(["id" => $task_id]);
+        if (!$task) {
+            return new JsonResponse(['error' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        // Convertir la colección en array y luego invertir el orden
+        $commentsCollection = $task->getComments();
+        $commentsArray = array_reverse(iterator_to_array($commentsCollection));
+
+        $comments = [];
+        foreach ($commentsArray as $comment) {
+            $comments[] = [
+                'id' => $comment->getId(),
+                'content' => $comment->getContent(),
+                'task' => $comment->getTask()->getId(),
+                'user' => $comment->getUser()->getEmail(),
+                'created_at' => $comment->getCreatedAt(),
+            ];
+        }
+
+        return new JsonResponse($comments, JsonResponse::HTTP_OK);
+    }
+
+    #[Route('/api/newComments/{task_id}', name: 'addComments', methods: ['POST'])]
+    public function addComment(int $task_id, Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $task = $this->taskRepository->findOneBy(["id" => $task_id]);
+        if (!$task) {
+            return new JsonResponse(['error' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+        if (!isset($data['content'])) {
+            return new JsonResponse(['error' => 'Content is required'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $comment = new Comment();
+        $comment->setContent($data['content']);
+        $comment->setTask($task);
+        $comment->setUser($user);
+        $comment->setCreatedAt(new \DateTimeImmutable());
+
+        $task->addComment($comment);
+        $user->addComment($comment);
+
+        $entityManager->persist($task);
+        $entityManager->persist($user);
+        $entityManager->persist($comment);
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Comment added'], JsonResponse::HTTP_OK);
+    }
 }

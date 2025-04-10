@@ -108,7 +108,7 @@ const KanbanBoard = ({ board, refreshBoards }) => {
         </div>
         <p>{board.description}</p>
         <div
-          className="d-flex flex-row align-items-center gap-2 mb-3"
+          className="w-25 d-flex flex-row align-items-center gap-2 mb-3"
           style={{ cursor: "pointer" }}
           onClick={() => setMemberModalVisible(true)}
         >

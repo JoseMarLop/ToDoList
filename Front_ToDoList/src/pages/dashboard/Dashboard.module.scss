@@ -9,16 +9,12 @@
     flex: 1;
     overflow: hidden;
     .dashboard_main_content {
-        flex: 1;
-        overflow-y: auto;
-        padding: 20px;
-        background: #83a4d4;
-        background: -webkit-linear-gradient(to left, #b6fbff, #83a4d4);
-        background: linear-gradient(
-          to left,
-          #b6fbff,
-          #83a4d4
-        ); //Different backgrounds for different web browsers
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: white;
+      // background: -webkit-linear-gradient(to left, #313940, #83a4d4);
+      // background: linear-gradient(to left, #313940, #181d22);
     }
   }
 }

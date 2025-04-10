@@ -1,0 +1,19 @@
+.sidebar{
+    background-color: #162029;
+    :global {
+        .nav-group-toggle:hover {
+          background-color: #343a40; // Un gris oscuro como ejemplo
+          color: white; // Cambiar texto al pasar el cursor
+          cursor: pointer;
+        }
+      
+        // Si quieres cambiar solo el icono o solo el texto
+        .nav-group-toggle:hover .nav-icon {
+          color: #0d6efd; // azul bootstrap por ejemplo
+        }
+      
+        .nav-group-toggle:hover span {
+          color: #f8f9fa;
+        }
+      }
+}

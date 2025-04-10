@@ -13,6 +13,7 @@ import {
 import CIcon from "@coreui/icons-react";
 import { cilFolder, cilGroup, cilPlus } from "@coreui/icons";
 import TableModal from "../../modals/TableModal";
+import styles from "./Sidebar.module.scss";
 
 const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
   const [visible, setVisible] = React.useState(false);
@@ -25,20 +26,22 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
         mode="add"
         refreshBoards={refreshBoards}
       />
-      <CSidebar className="border-end">
-        <CSidebarHeader className="border-bottom">
-          <CSidebarBrand>CoreUI</CSidebarBrand>
-        </CSidebarHeader>
+      <CSidebar className={`${styles.sidebar} border-end`}>
         <CSidebarNav>
-          <CNavTitle>ToDoList</CNavTitle>
+          <CNavTitle><span style={{color:'lightgray'}}>ToDoList</span></CNavTitle>
 
           {/* Tableros de los cuales el usuario es dueño */}
           {boards.owned && boards.owned.length > 0 && (
             <CNavGroup
               toggler={
-                <>
-                  <CIcon customClassName="nav-icon" icon={cilFolder} /> Mis tableros
-                </>
+                <div className={`${styles.nav_group} d-flex flex-row align-items-center`}>
+                  <CIcon
+                    customClassName="nav-icon"
+                    icon={cilFolder}
+                    style={{ color: "lightgray" }}
+                  />
+                  <span style={{ color: "lightgray" }}>Mis tableros</span>
+                </div>
               }
             >
               {boards.owned.map((board, index) => (
@@ -51,7 +54,7 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
                   <span className="nav-icon">
                     <span className="nav-icon-bullet"></span>
                   </span>{" "}
-                  {board.name}
+                  <span style={{ color: "lightgray" }}>{board.name}</span>
                 </CNavItem>
               ))}
             </CNavGroup>
@@ -62,7 +65,12 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
             <CNavGroup
               toggler={
                 <>
-                  <CIcon customClassName="nav-icon" icon={cilGroup} /> Equipos
+                  <CIcon
+                    customClassName="nav-icon"
+                    icon={cilGroup}
+                    style={{ color: "lightgray" }}
+                  />
+                  <span style={{ color: "lightgray" }}>Equipos</span>
                 </>
               }
             >
@@ -76,7 +84,7 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
                   <span className="nav-icon">
                     <span className="nav-icon-bullet"></span>
                   </span>{" "}
-                  {board.name}
+                  <span style={{ color: "lightgray" }}>{board.name}</span>
                 </CNavItem>
               ))}
             </CNavGroup>
@@ -84,12 +92,14 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
 
           {/* Botón para agregar un nuevo tablero */}
           <CNavItem href="#" onClick={() => setVisible(true)}>
-            <CIcon customClassName="nav-icon" icon={cilPlus} /> Añadir tablero
+            <CIcon
+              customClassName="nav-icon"
+              icon={cilPlus}
+              style={{ color: "lightgray" }}
+            />
+            <span style={{ color: "lightgray" }}>Añadir tablero</span>
           </CNavItem>
         </CSidebarNav>
-        <CSidebarHeader className="border-top">
-          <CSidebarToggler />
-        </CSidebarHeader>
       </CSidebar>
     </>
   );

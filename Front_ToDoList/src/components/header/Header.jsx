@@ -18,7 +18,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilLockLocked, cilMenu, cilUser } from "@coreui/icons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import spanish from "../../assets/spanish.png";
 import english from "../../assets/english.png";
@@ -51,7 +51,7 @@ const Header = () => {
   const email = localStorage.getItem("email");
 
   return (
-    <CHeader position="sticky" className="p-0 py-3 border-bottom shadow-sm">
+    <CHeader position="sticky" className={`${styles.header} p-0 py-3 border-bottom shadow-sm`}>
       <CContainer className="px-4" fluid>
         <CHeaderToggler
           style={{ marginInlineStart: "-14px" }}
@@ -69,14 +69,14 @@ const Header = () => {
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
             <CNavLink to="/dashboard" as={NavLink}>
-              {t("header:dashboard")}
+              <span className={styles.navlink}>{t("header:dashboard")}</span>
             </CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav className="ms-auto">
           <CDropdown variant="nav-item" placement="bottom">
             <CDropdownToggle caret={false}>
-              <CIcon icon={cilUser} size="lg" />
+              <CIcon icon={cilUser} size="lg" className={styles.navlink}/>
             </CDropdownToggle>
             <CDropdownMenu>
               {authenticated ? (

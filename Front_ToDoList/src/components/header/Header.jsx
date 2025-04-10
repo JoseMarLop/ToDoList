@@ -50,11 +50,6 @@ const Header = () => {
 
   const email = localStorage.getItem("email");
 
-  useEffect(() => {
-    window.addEventListener("popstate", () => {
-      window.location.reload();
-    });
-  }, []);
   return (
     <CHeader position="sticky" className="p-0 py-3 border-bottom shadow-sm">
       <CContainer className="px-4" fluid>
@@ -65,10 +60,12 @@ const Header = () => {
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
+
         <HeaderSidebar
           visible={isSidebarVisible}
           setVisible={setSideBarVisible}
         />
+
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
             <CNavLink to="/dashboard" as={NavLink}>
@@ -184,4 +181,5 @@ const HeaderSidebar = ({ visible, setVisible }) => {
     </COffcanvas>
   );
 };
+
 export default Header;

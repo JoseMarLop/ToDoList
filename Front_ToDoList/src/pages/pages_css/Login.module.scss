@@ -1,12 +1,11 @@
 .login_container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; 
-    width: 100vw; 
-    background-color: #f0f2f5; 
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #f0f2f5;
+
   /* Estilos para la caja de login */
   .login_box {
     background-color: white;
@@ -16,18 +15,18 @@
     width: 100%;
     max-width: 400px; /* Ancho máximo de la caja */
   }
-  
+
   /* Estilos para los grupos de inputs */
   .input_group {
     margin-bottom: 1rem;
   }
-  
+
   .input_group label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
   }
-  
+
   .input_group input {
     width: 100%;
     padding: 0.5rem;
@@ -35,8 +34,6 @@
     border-radius: 4px;
     font-size: 1rem;
   }
-  
-  /* Estilos para el botón de submit */
   button {
     width: 100%;
     padding: 0.75rem;
@@ -47,11 +44,12 @@
     font-size: 1rem;
     cursor: pointer;
   }
-  
+
   button:hover {
     background-color: #0056b3;
   }
-  a{
+  a {
     margin-top: 4dvh;
     text-align: center;
   }
+}

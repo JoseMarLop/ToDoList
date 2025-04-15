@@ -13,11 +13,12 @@ import {
 } from "@coreui/react";
 import React, { useState } from "react";
 
-import { addTable, updateTable, deleteTable } from "../../data/table";
+import { addTable, updateTable, deleteTable } from "../../../data/table";
 import CIcon from "@coreui/icons-react";
 import { cilCommentBubble, cilShortText, cilTrash } from "@coreui/icons";
+import styles from "./TableModal.module.scss";
 
-const TableModal = ({ visible, setVisible, board, mode , refreshBoards}) => {
+const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
   const [error, setError] = useState(null);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
@@ -63,7 +64,7 @@ const TableModal = ({ visible, setVisible, board, mode , refreshBoards}) => {
       setError("El nombre del tablero no puede estar en blanco");
       return;
     }
-    const result = await updateTable(tableData,board.id);
+    const result = await updateTable(tableData, board.id);
     if (result.error) {
       setError(result.error);
       return;
@@ -94,32 +95,33 @@ const TableModal = ({ visible, setVisible, board, mode , refreshBoards}) => {
         visible={visible}
         onClose={() => setVisible(false)}
       >
-        <CModalHeader>
+        <CModalHeader className={styles.modal_header}>
           <CModalTitle>
             {mode === "add" ? "Añadir tablero" : "Editar tablero"}
           </CModalTitle>
         </CModalHeader>
-        <CModalBody>
+        <CModalBody className={styles.modal_body}>
           <CForm>
+            <span className={styles.modal_text}>Title</span>
             <CInputGroup className="mb-3">
-              <CInputGroupText>
-                <CIcon icon={cilCommentBubble} />
-              </CInputGroupText>
               <CFormInput
                 name="name"
                 value={tableData.name}
                 onChange={handleChange}
+                className={styles.table_input}
               />
             </CInputGroup>
+            <span className={styles.modal_text}>Description</span>
             <CInputGroup className="mb-3">
-              <CInputGroupText>
+              {/* <CInputGroupText>
                 <CIcon icon={cilShortText} />
-              </CInputGroupText>
+              </CInputGroupText> */}
               <CFormTextarea
                 name="description"
                 value={tableData.description}
                 onChange={handleChange}
                 aria-label="Descripción del tablero"
+                className={styles.table_input}
               />
             </CInputGroup>
             {error && (
@@ -129,7 +131,7 @@ const TableModal = ({ visible, setVisible, board, mode , refreshBoards}) => {
             )}
           </CForm>
         </CModalBody>
-        <CModalFooter>
+        <CModalFooter className={styles.modal_footer}>
           <CButton color="secondary" onClick={() => setVisible(false)}>
             Close
           </CButton>
@@ -140,7 +142,10 @@ const TableModal = ({ visible, setVisible, board, mode , refreshBoards}) => {
             Save changes
           </CButton>
           {mode !== "add" && (
-            <CButton color="danger" onClick={() => setDeleteConfirmVisible(true)}>
+            <CButton
+              color="danger"
+              onClick={() => setDeleteConfirmVisible(true)}
+            >
               <CIcon icon={cilTrash} />
             </CButton>
           )}
@@ -158,7 +163,6 @@ const TableModal = ({ visible, setVisible, board, mode , refreshBoards}) => {
 
 export default TableModal;
 
-
 //Modal to confirm deletion
 const DeleteConfirmModal = ({ visible, onClose, onConfirm }) => {
   return (
@@ -167,7 +171,8 @@ const DeleteConfirmModal = ({ visible, onClose, onConfirm }) => {
         <CModalTitle>Confirmar eliminación</CModalTitle>
       </CModalHeader>
       <CModalBody>
-        ¿Estás seguro de que deseas eliminar este tablero? Esta acción no se puede deshacer.
+        ¿Estás seguro de que deseas eliminar este tablero? Esta acción no se
+        puede deshacer.
       </CModalBody>
       <CModalFooter>
         <CButton color="secondary" onClick={onClose}>

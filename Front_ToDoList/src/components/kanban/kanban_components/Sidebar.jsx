@@ -12,7 +12,7 @@ import {
 
 import CIcon from "@coreui/icons-react";
 import { cilFolder, cilGroup, cilPlus } from "@coreui/icons";
-import TableModal from "../../modals/TableModal";
+import TableModal from "../../modals/TableModal/TableModal";
 import styles from "./Sidebar.module.scss";
 
 const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {

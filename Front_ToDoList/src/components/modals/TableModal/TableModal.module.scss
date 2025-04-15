@@ -1,0 +1,28 @@
+.modal_header {
+  background-color: #313940;
+  color: white;
+  border-bottom: none;
+}
+
+.modal_body {
+  background-color: #313940;
+  color: white;
+
+  .table_input {
+    background-color: #3a444c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+  }
+
+  .modal_text{
+    margin-left: 5px;
+    color: lightgrey;
+  }
+}
+
+.modal_footer {
+  background-color: #313940;
+  color: white;
+  border: none;
+}

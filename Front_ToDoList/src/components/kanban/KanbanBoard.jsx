@@ -3,7 +3,7 @@ import { DndContext } from "@dnd-kit/core";
 import Column from "./kanban_components/Column";
 import CIcon from "@coreui/icons-react";
 import { cilPencil, cilPlus, cilUser } from "@coreui/icons";
-import TableModal from "../modals/TableModal.jsx";
+import TableModal from "../modals/TableModal/TableModal.jsx";
 import NewTaskModal from "../modals/NewTaskModal";
 import MemberModal from "../modals/MemberModal/MemberModal";
 import { changeTaskStatus } from "../../data/task";

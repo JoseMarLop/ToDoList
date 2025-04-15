@@ -1,0 +1,35 @@
+.modal_header {
+  background-color: #313940;
+  color: white;
+  border-bottom: none;
+}
+
+.modal_body {
+  background-color: #313940;
+  color: white;
+
+  .task_input {
+    background-color: #3a444c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    &::placeholder {
+      color: #b0b3b8; // Gris claro, cambiálo como prefieras
+      opacity: 1; // Asegura visibilidad en todos los navegadores
+    }
+  }
+
+  .task_select{
+    background-color: #3a444c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 40px;
+  }
+}
+
+.modal_footer {
+  background-color: #313940;
+  color: white;
+  border: none;
+}

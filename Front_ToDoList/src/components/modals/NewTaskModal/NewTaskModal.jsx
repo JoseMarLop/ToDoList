@@ -14,14 +14,15 @@ import {
   CModalTitle,
 } from "@coreui/react";
 import { useEffect, useState } from "react";
-import { addTask } from "../../data/task";
+import { addTask } from "../../../data/task";
+import styles from "./NewTaskModal.module.scss";
 import {
   FcHighPriority,
   FcLowPriority,
   FcMediumPriority,
 } from "react-icons/fc";
 
-const NewTaskModal = ({ visible, setVisible, board , refreshBoards}) => {
+const NewTaskModal = ({ visible, setVisible, board, refreshBoards }) => {
   const [taskData, setTaskData] = useState({
     title: "",
     description: "",
@@ -80,44 +81,42 @@ const NewTaskModal = ({ visible, setVisible, board , refreshBoards}) => {
       visible={visible}
       onClose={() => setVisible(false)}
     >
-      <CModalHeader>
+      <CModalHeader className={styles.modal_header}>
         <CModalTitle>Añadir tarea</CModalTitle>
-        <span>Board id: {board.id}</span>
       </CModalHeader>
-      <CModalBody>
+      <CModalBody className={styles.modal_body}>
         <CForm>
           {/* Title */}
           <CInputGroup className="mb-3">
-            <CInputGroupText>
-              <CIcon icon={cilCommentBubble} />
-            </CInputGroupText>
             <CFormInput
               name="title"
               value={taskData.title}
               onChange={handleChange}
               placeholder="Título"
+              className={styles.task_input}
             />
           </CInputGroup>
 
           {/* Description */}
           <CInputGroup className="mb-3">
-            <CInputGroupText>
-              <CIcon icon={cilDescription} />
-            </CInputGroupText>
             <CFormTextarea
               name="description"
               value={taskData.description}
               onChange={handleChange}
               placeholder="Descripción"
+              className={styles.task_input}
             />
           </CInputGroup>
 
           {/* Priority */}
           <div className="mb-3 w-50">
+            <div className="d-flex flex-row align-items-center mb-2">
+              <span className="me-3">Prioridad</span>
+              {getPriorityIcon()}
+            </div>
             <CInputGroup>
-              <CInputGroupText>{getPriorityIcon()}</CInputGroupText>
               <select
-                className="form-select"
+                className={styles.task_select}
                 name="priority"
                 value={taskData.priority}
                 onChange={handleChange}
@@ -130,7 +129,7 @@ const NewTaskModal = ({ visible, setVisible, board , refreshBoards}) => {
           </div>
         </CForm>
       </CModalBody>
-      <CModalFooter>
+      <CModalFooter className={styles.modal_footer}>
         <CButton color="secondary" onClick={() => setVisible(false)}>
           Cerrar
         </CButton>

@@ -3,7 +3,7 @@ import { DndContext } from "@dnd-kit/core";
 import Column from "./kanban_components/Column";
 import CIcon from "@coreui/icons-react";
 import { cilPencil, cilPlus, cilUser } from "@coreui/icons";
-import TableModal from "../modals/TableModal";
+import TableModal from "../modals/TableModal.jsx";
 import NewTaskModal from "../modals/NewTaskModal";
 import MemberModal from "../modals/MemberModal/MemberModal";
 import { changeTaskStatus } from "../../data/task";
@@ -57,18 +57,21 @@ const KanbanBoard = ({ board, refreshBoards }) => {
     });
 
     changeTaskStatus(task.id, toColumn)
-    .then((data) => {
-      if (data.error) {
-        console.error("Error al actualizar el estado de la tarea", data.error);
-        // Si hay un error, podrías revertir la actualización del frontend
-      } else {
-        console.log("Tarea actualizada correctamente", data.message);
-      }
-    })
-    .catch((error) => {
-      console.error("Error en la solicitud de cambio de estado", error);
-      // Si ocurre un error, también podrías revertir la actualización del frontend
-    });
+      .then((data) => {
+        if (data.error) {
+          console.error(
+            "Error al actualizar el estado de la tarea",
+            data.error
+          );
+          // Si hay un error, podrías revertir la actualización del frontend
+        } else {
+          console.log("Tarea actualizada correctamente", data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud de cambio de estado", error);
+        // Si ocurre un error, también podrías revertir la actualización del frontend
+      });
   }
 
   return (
@@ -93,40 +96,37 @@ const KanbanBoard = ({ board, refreshBoards }) => {
         refreshBoards={refreshBoards}
       />
       <DndContext onDragEnd={handleDragEnd}>
-        <div className="d-flex flex-row align-items-center">
-          <h2 className={styles.board_text}>{board.name}</h2>
-          {board.user_rol === "admin" ? (
-            <CIcon
-              icon={cilPencil}
-              className="ms-3"
-              size="lg"
-              style={{ cursor: "pointer" }}
-              onClick={() => setTableModalVisible(true)}
-            />
-          ) : (
-            <></>
-          )}
-        </div>
-        <p className={styles.board_text}>{board.description}</p>
-        <div
-          className="w-25 d-flex flex-row align-items-center gap-2 mb-3"
-          style={{ cursor: "pointer" }}
-          onClick={() => setMemberModalVisible(true)}
-        >
-          <CIcon icon={cilUser} size="lg" className={styles.board_text}/>
-          <span className={styles.board_text}>Miembros</span>
-        </div>
-        <div
-          className="d-flex flex-row align-items-center gap-2 mb-3"
-          style={{ cursor: "pointer" }}
-          onClick={() => setTaskModalVisible(true)}
-        >
-          <CIcon icon={cilPlus} size="lg" className={styles.board_text}/>
-          <span className={styles.board_text}>Añadir tarea</span>
-        </div>
-        {/* <div>
-          <span>{board.user_rol}</span>
-        </div> */}
+          <div className="d-flex flex-row align-items-center">
+            <h2 className={styles.board_text}>{board.name}</h2>
+            {board.user_rol === "admin" ? (
+              <CIcon
+                icon={cilPencil}
+                className={`${styles.board_text} ms-3`}
+                size="lg"
+                style={{ cursor: "pointer" }}
+                onClick={() => setTableModalVisible(true)}
+              />
+            ) : (
+              <></>
+            )}
+          </div>
+          <p className={styles.board_text}>{board.description}</p>
+          <div
+            className="w-25 d-flex flex-row align-items-center gap-2 mb-3"
+            style={{ cursor: "pointer" }}
+            onClick={() => setMemberModalVisible(true)}
+          >
+            <CIcon icon={cilUser} size="lg" className={styles.board_text} />
+            <span className={styles.board_text}>Miembros</span>
+          </div>
+          <div
+            className="d-flex flex-row align-items-center gap-2 mb-3"
+            style={{ cursor: "pointer" }}
+            onClick={() => setTaskModalVisible(true)}
+          >
+            <CIcon icon={cilPlus} size="lg" className={styles.board_text} />
+            <span className={styles.board_text}>Añadir tarea</span>
+          </div>
         <div style={{ display: "flex", gap: "10px" }}>
           {Object.keys(columns).map((col) => (
             <Column key={col} id={col} tasks={columns[col]} />

@@ -43,6 +43,7 @@ final class TableController extends AbstractController
                     'description' => $task->getDescription(),
                     'status' => $task->getStatus(),
                     'created_at' => $task->getCreatedAt(),
+                    'priority' => $task->getPriority()
                 ];
             }
 
@@ -82,6 +83,7 @@ final class TableController extends AbstractController
                     'description' => $task->getDescription(),
                     'status' => $task->getStatus(),
                     'created_at' => $task->getCreatedAt(),
+                    'priority' => $task->getPriority()
                 ];
             }
 

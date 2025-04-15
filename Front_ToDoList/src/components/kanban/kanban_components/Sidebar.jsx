@@ -29,12 +29,11 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
       <CSidebar className={`${styles.sidebar} border-end`}>
         <CSidebarNav>
           <CNavTitle><span style={{color:'lightgray'}}>ToDoList</span></CNavTitle>
-
           {/* Tableros de los cuales el usuario es dueño */}
           {boards.owned && boards.owned.length > 0 && (
             <CNavGroup
               toggler={
-                <div className={`${styles.nav_group} d-flex flex-row align-items-center`}>
+                <div className="d-flex flex-row align-items-center">
                   <CIcon
                     customClassName="nav-icon"
                     icon={cilFolder}

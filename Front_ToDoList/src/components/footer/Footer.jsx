@@ -12,7 +12,7 @@ const Footer = () => {
       <div className={styles.footer_wave_container}>
         <Wave
           className={styles.footer_wave}
-          fill="#b6fbff71"
+          fill="#434343"
           paused={false}
           options={{
             height: 60,
@@ -23,7 +23,7 @@ const Footer = () => {
         />
         <Wave
           className={styles.footer_wave}
-          fill="#95b8ec"
+          fill="#3A3A3A"
           paused={false}
           options={{
             height: 90,
@@ -34,7 +34,7 @@ const Footer = () => {
         />
         <Wave
           className={styles.footer_wave}
-          fill="#83a4d4"
+          fill="#323232"
           paused={false}
           options={{
             height: 120,

@@ -51,7 +51,10 @@ const Header = () => {
   const email = localStorage.getItem("email");
 
   return (
-    <CHeader position="sticky" className={`${styles.header} p-0 py-3 border-bottom shadow-sm`}>
+    <CHeader
+      position="sticky"
+      className={`${styles.header} p-0 py-3 border-bottom shadow-sm`}
+    >
       <CContainer className="px-4" fluid>
         <CHeaderToggler
           style={{ marginInlineStart: "-14px" }}
@@ -68,6 +71,11 @@ const Header = () => {
 
         <CHeaderNav className="d-none d-md-flex">
           <CNavItem>
+            <CNavLink to="/welcome" as={NavLink}>
+              <span className={styles.navlink}>Welcome</span>
+            </CNavLink>
+          </CNavItem>
+          <CNavItem>
             <CNavLink to="/dashboard" as={NavLink}>
               <span className={styles.navlink}>{t("header:dashboard")}</span>
             </CNavLink>
@@ -76,7 +84,7 @@ const Header = () => {
         <CHeaderNav className="ms-auto">
           <CDropdown variant="nav-item" placement="bottom">
             <CDropdownToggle caret={false}>
-              <CIcon icon={cilUser} size="lg" className={styles.navlink}/>
+              <CIcon icon={cilUser} size="lg" className={styles.navlink} />
             </CDropdownToggle>
             <CDropdownMenu>
               {authenticated ? (

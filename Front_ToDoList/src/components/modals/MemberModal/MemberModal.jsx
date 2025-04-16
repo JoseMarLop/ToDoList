@@ -11,6 +11,7 @@ import { useState } from "react";
 import CIcon from "@coreui/icons-react";
 import { cibSuperuser, cilPlus, cilTrash } from "@coreui/icons";
 import { addMember, deleteMember, updateMember } from "../../../data/member";
+import styles from "./MemberModal.module.scss";
 
 const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
   const [addingMember, setAddingMember] = useState(false);
@@ -72,10 +73,10 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
       visible={visible}
       onClose={() => setVisible(false)}
     >
-      <CModalHeader>
+      <CModalHeader className={styles.modal_header}>
         <CModalTitle>Miembros</CModalTitle>
       </CModalHeader>
-      <CModalBody className="d-flex flex-row">
+      <CModalBody className={`${styles.modal_body} d-flex flex-row`}>
         {!board ? (
           <div>Cargando...</div>
         ) : (
@@ -85,7 +86,6 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
                 <strong>Propietario:</strong> {board.owner}
               </p>
 
-              <h5>Miembros:</h5>
               <div className="d-flex flex-row align-items-center my-2">
                 <CIcon icon={cibSuperuser} />
                 <span>&#8594;</span> Admin
@@ -145,7 +145,7 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
                         value={memberEmail}
                         onChange={handleEmailChange}
                         onBlur={() => setAddingMember(false)}
-                        onKeyDown={handleKeyDown} // Aquí se captura el evento de la tecla Enter
+                        onKeyDown={handleKeyDown} 
                       />
                       {error && (
                         <div style={{ color: "red", fontSize: "12px" }}>
@@ -160,8 +160,8 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
                       style={{ cursor: "pointer" }}
                       onClick={() => setAddingMember(true)}
                     >
-                      <CIcon icon={cilPlus} />
-                      <span className="ms-1" style={{ color: "gray" }}>
+                      <CIcon icon={cilPlus} className={styles.member_text}/>
+                      <span className={`${styles.member_text} ms-1`}>
                         Añadir miembro
                       </span>
                     </div>

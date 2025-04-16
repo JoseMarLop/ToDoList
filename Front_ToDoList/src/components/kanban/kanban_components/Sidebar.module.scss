@@ -1,9 +1,9 @@
 .sidebar {
-  background-color: #141F29;
+  background-color: #323232;
 
   :global {
     .nav-group-toggle:hover {
-      background-color: #343a40;
+      background-color: #242424;
       color: white;
       cursor: pointer;
     }
@@ -18,7 +18,7 @@
 
     // 👇 Aplica los mismos estilos a los items de los tableros y el botón de añadir tablero
     .nav-link:hover {
-      background-color: #343a40;
+      background-color: #242424;
       color: white;
       cursor: pointer;
     }

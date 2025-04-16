@@ -1,12 +1,24 @@
 .welcome_section {
   height: 90vh;
-  background: #83a4d4;
-  background: -webkit-linear-gradient(to left, #b6fbff, #83a4d4);
+  // background: #83a4d4;
+  // background: -webkit-linear-gradient(to left, #b6fbff, #83a4d4);
+  // background: linear-gradient(
+  //   to left,
+  //   #b6fbff,
+  //   #83a4d4
+  // ); //Different backgrounds for different web browsers
+  background: #000000; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #434343,
+    #000000
+  ); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(
-    to left,
-    #b6fbff,
-    #83a4d4
-  ); //Different backgrounds for different web browsers
+    to right,
+    #434343,
+    #000000
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
   overflow: hidden;
   clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
   div {
@@ -26,7 +38,7 @@
       color: white;
       opacity: 0;
       animation: fadeInLeft 1s ease-out forwards;
-      
+
       h1 {
         font-size: 3rem;
         font-weight: bold;
@@ -112,4 +124,3 @@
     #83a4d4
   ); //Different backgrounds for different web browsers
 }
-

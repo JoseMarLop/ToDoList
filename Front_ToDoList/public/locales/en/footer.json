@@ -1,20 +1,16 @@
 {
-    "tableTitle": "Legal Information & Contact",
-    "tableSubtitle": "Find legal details, help, and quick navigation",
-  
-    "legalSection": "Legal",
-    "legalDescription1": "Legal Terms",
-    "legalDescription2": "Legal Notice",
-    "legalDescription3": "Right of Withdrawal",
-  
-    "helpSection": "Help & Contact",
-    "helpDescription1": "Help Center",
-    "helpDescription2": "Corporate Fitness",
-    "helpDescription3": "Work with Us",
-  
-    "navigationSection": "Navigation",
-    "navigationDescription1": "Gyms",
-    "navigationDescription2": "Gyms by Region",
-    "navigationDescription3": "Contract"
-  }
-  
+  "tableTitle": "Legal & Support",
+  "tableSubtitle": "Terms, help, and site navigation",
+
+  "legalSection": "Legal",
+  "legalDescription1": "Terms of Service",
+  "legalDescription2": "Privacy Policy",
+
+  "helpSection": "Support",
+  "helpDescription1": "Help Center",
+  "helpDescription2": "Contact Us",
+
+  "navigationSection": "Navigation",
+  "navigationDescription1": "My Boards",
+  "navigationDescription2": "Account Settings"
+}

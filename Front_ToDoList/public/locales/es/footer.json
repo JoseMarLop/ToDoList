@@ -1,20 +1,16 @@
 {
-    "tableTitle": "Información Legal y Contacto",
-    "tableSubtitle": "Encuentra detalles legales, ayuda y navegación rápida",
-  
-    "legalSection": "Legal",
-    "legalDescription1": "Condiciones Legales",
-    "legalDescription2": "Aviso Legal",
-    "legalDescription3": "Derecho de desistimiento",
-  
-    "helpSection": "Ayuda y Contacto",
-    "helpDescription1": "HelpCenter",
-    "helpDescription2": "Corporate Fitness",
-    "helpDescription3": "Trabaja con nosotros",
-  
-    "navigationSection": "Navegación",
-    "navigationDescription1": "Gimnasios",
-    "navigationDescription2": "Gimnasios por regiones",
-    "navigationDescription3": "Contrato"
-  }
-  
+  "tableTitle": "Legal y Soporte",
+  "tableSubtitle": "Términos, ayuda y navegación del sitio",
+
+  "legalSection": "Legal",
+  "legalDescription1": "Términos del servicio",
+  "legalDescription2": "Política de privacidad",
+
+  "helpSection": "Soporte",
+  "helpDescription1": "Centro de ayuda",
+  "helpDescription2": "Contáctanos",
+
+  "navigationSection": "Navegación",
+  "navigationDescription1": "Mis tableros",
+  "navigationDescription2": "Configuración de cuenta"
+}

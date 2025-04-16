@@ -64,11 +64,6 @@ const Footer = () => {
                   <td>{t("footer:helpDescription2")}</td>
                   <td>{t("footer:navigationDescription2")}</td>
                 </tr>
-                <tr>
-                  <td>{t("footer:legalDescription3")}</td>
-                  <td>{t("footer:helpDescription3")}</td>
-                  <td>{t("footer:navigationDescription3")}</td>
-                </tr>
               </tbody>
             </table>
           </section>

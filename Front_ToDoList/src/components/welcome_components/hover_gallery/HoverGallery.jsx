@@ -1,8 +1,8 @@
 import styles from "./HoverGallery.module.scss";
 import { useState } from "react";
-import image1 from "../../../assets/defaultImg.jpeg";
-import image2 from "../../../assets/defaultImg2.png";
-import image3 from "../../../assets/defaultImg3.png";
+import image1 from "../../../assets/carousel1.png";
+import image2 from "../../../assets/carousel2.png";
+import image3 from "../../../assets/carousel3.png";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 

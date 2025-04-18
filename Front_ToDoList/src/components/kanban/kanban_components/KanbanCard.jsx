@@ -10,7 +10,7 @@ import {
   FcMediumPriority,
 } from "react-icons/fc";
 
-const KanbanCard = ({ id, column, task }) => {
+const KanbanCard = ({ id, column, task, refreshBoards }) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id,
@@ -60,6 +60,7 @@ const KanbanCard = ({ id, column, task }) => {
         visible={taskModalVisible}
         setVisible={setTaskModalVisible}
         task={task}
+        refreshBoards={refreshBoards}
       />
       <div
         ref={setNodeRef}

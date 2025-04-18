@@ -31,7 +31,7 @@ import {
 import Subtasks from "./Subtasks";
 import Comments from "./Comments";
 
-const TaskModal = ({ visible, setVisible, task }) => {
+const TaskModal = ({ visible, setVisible, task, refreshBoards}) => {
   // State variables for task details
   const [fullTask, setFullTask] = useState(null);
   const [originalTask, setOriginalTask] = useState(null);
@@ -134,6 +134,7 @@ const TaskModal = ({ visible, setVisible, task }) => {
     } else {
       alert("Tarea editada correctamente");
       setVisible(false);
+      refreshBoards();
     }
   };
 
@@ -143,8 +144,9 @@ const TaskModal = ({ visible, setVisible, task }) => {
     if (result.error) {
       console.log(result.error);
     } else {
-      alert("Tarea eliminada correctamente");
+      // alert("Tarea eliminada correctamente");
       setVisible(false);
+      refreshBoards();
     }
   };
 

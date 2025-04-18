@@ -129,7 +129,7 @@ const KanbanBoard = ({ board, refreshBoards }) => {
           </div>
         <div style={{ display: "flex", gap: "10px" }}>
           {Object.keys(columns).map((col) => (
-            <Column key={col} id={col} tasks={columns[col]} />
+            <Column key={col} id={col} tasks={columns[col]} refreshBoards={refreshBoards}/>
           ))}
         </div>
       </DndContext>

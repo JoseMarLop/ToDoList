@@ -20,18 +20,23 @@ const KanbanBoard = ({ board, refreshBoards }) => {
   const [tableModalVisible, setTableModalVisible] = useState(false);
   const [taskModalVisible, setTaskModalVisible] = useState(false);
   const [memberModalVisible, setMemberModalVisible] = useState(false);
+  const [priorityFilter, setPriorityFilter] = useState("all");
 
   useEffect(() => {
     if (board && board.tasks) {
       const tasksByStatus = { todo: [], doing: [], review: [], done: [] };
+
       board.tasks.forEach((task) => {
-        if (tasksByStatus[task.status]) {
-          tasksByStatus[task.status].push(task);
+        if (priorityFilter === "all" || task.priority === priorityFilter) {
+          if (tasksByStatus[task.status]) {
+            tasksByStatus[task.status].push(task);
+          }
         }
       });
+
       setColumns(tasksByStatus);
     }
-  }, [board]);
+  }, [board, priorityFilter]); // ← importante que escuche también a priorityFilter
 
   function handleDragEnd(event) {
     const { active, over } = event;
@@ -96,40 +101,59 @@ const KanbanBoard = ({ board, refreshBoards }) => {
         refreshBoards={refreshBoards}
       />
       <DndContext onDragEnd={handleDragEnd}>
-          <div className="d-flex flex-row align-items-center">
-            <h2 className={styles.board_text}>{board.name}</h2>
-            {board.user_rol === "admin" ? (
-              <CIcon
-                icon={cilPencil}
-                className={`${styles.board_text} ms-3`}
-                size="lg"
-                style={{ cursor: "pointer" }}
-                onClick={() => setTableModalVisible(true)}
-              />
-            ) : (
-              <></>
-            )}
-          </div>
-          <p className={styles.board_text}>{board.description}</p>
-          <div
-            className="w-25 d-flex flex-row align-items-center gap-2 mb-3"
-            style={{ cursor: "pointer" }}
-            onClick={() => setMemberModalVisible(true)}
+        <div className="d-flex flex-row align-items-center">
+          <h2 className={styles.board_text}>{board.name}</h2>
+          {board.user_rol === "admin" ? (
+            <CIcon
+              icon={cilPencil}
+              className={`${styles.board_text} ms-3`}
+              size="lg"
+              style={{ cursor: "pointer" }}
+              onClick={() => setTableModalVisible(true)}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
+        <p className={styles.board_text}>{board.description}</p>
+        <div
+          className="w-25 d-flex flex-row align-items-center gap-2 mb-3"
+          style={{ cursor: "pointer" }}
+          onClick={() => setMemberModalVisible(true)}
+        >
+          <CIcon icon={cilUser} size="lg" className={styles.board_text} />
+          <span className={styles.board_text}>Miembros</span>
+        </div>
+        <div
+          className="d-flex flex-row align-items-center gap-2 mb-3"
+          style={{ cursor: "pointer" }}
+          onClick={() => setTaskModalVisible(true)}
+        >
+          <CIcon icon={cilPlus} size="lg" className={styles.board_text} />
+          <span className={styles.board_text}>Añadir tarea</span>
+        </div>
+        <div className="mb-3">
+          <label className={styles.board_text}>Filtrar por prioridad:</label>
+          <select
+            className="form-select w-auto ms-2 d-inline"
+            value={priorityFilter}
+            onChange={(e) => setPriorityFilter(e.target.value)}
           >
-            <CIcon icon={cilUser} size="lg" className={styles.board_text} />
-            <span className={styles.board_text}>Miembros</span>
-          </div>
-          <div
-            className="d-flex flex-row align-items-center gap-2 mb-3"
-            style={{ cursor: "pointer" }}
-            onClick={() => setTaskModalVisible(true)}
-          >
-            <CIcon icon={cilPlus} size="lg" className={styles.board_text} />
-            <span className={styles.board_text}>Añadir tarea</span>
-          </div>
+            <option value="all">Todas</option>
+            <option value="1">Prioridad baja</option>
+            <option value="2">Prioridad media</option>
+            <option value="3">Prioridad alta</option>
+            {/* puedes agregar más niveles si los tienes */}
+          </select>
+        </div>
         <div style={{ display: "flex", gap: "10px" }}>
           {Object.keys(columns).map((col) => (
-            <Column key={col} id={col} tasks={columns[col]} refreshBoards={refreshBoards}/>
+            <Column
+              key={col}
+              id={col}
+              tasks={columns[col]}
+              refreshBoards={refreshBoards}
+            />
           ))}
         </div>
       </DndContext>

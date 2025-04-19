@@ -125,6 +125,7 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
                             onChange={() =>
                               handleRoleChange(board.id, member.id)
                             }
+                            disabled={board.user_rol !== "admin"}
                           />
                           <CIcon icon={cibSuperuser} />
                         </div>

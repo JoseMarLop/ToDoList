@@ -120,12 +120,14 @@ export const deleteSubtask = async (subtaskId) => {
 };
 
 export const changeTaskStatus = async (taskId, status) => {
+  const lang = localStorage.getItem('language') || 'en';
   try {
     const response = await fetch(`${API_URL}/changeTaskStatus/${taskId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        "X-Language": lang
       },
       body: JSON.stringify({status}),
     });

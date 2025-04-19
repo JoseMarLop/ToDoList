@@ -230,13 +230,29 @@ final class TaskController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
+        $lang = $request->headers->get('X-Language', 'en');
 
         $task = $this->taskRepository->findOneBy(['id' => $id]);
         if (!$task) {
             return new JsonResponse(['error' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
+        $statusMessage = $lang === 'es'
+            ? 'El usuario cambió el estado a ' . strtoupper($data['status'])
+            : 'The user changed status to ' . strtoupper($data['status']);
+
+        $comment = new Comment();
+        $comment->setContent($statusMessage);
+        $comment->setTask($task);
+        $comment->setUser($user);
         $task->setStatus($data['status']);
+
+        $task->addComment($comment);
+
+        $comment->setCreatedAt(new \DateTimeImmutable());
+        $user->addComment($comment);
+        $entityManager->persist($comment);
+        $entityManager->persist($user);
         $entityManager->persist($task);
         $entityManager->flush();
         return new JsonResponse(['message' => 'Task status updated'], JsonResponse::HTTP_OK);
@@ -339,5 +355,4 @@ final class TaskController extends AbstractController
 
         return new JsonResponse(['message' => 'Comment deleted'], JsonResponse::HTTP_OK);
     }
-
 }

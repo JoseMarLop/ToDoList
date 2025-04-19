@@ -144,7 +144,6 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards}) => {
     if (result.error) {
       console.log(result.error);
     } else {
-      // alert("Tarea eliminada correctamente");
       setVisible(false);
       refreshBoards();
     }

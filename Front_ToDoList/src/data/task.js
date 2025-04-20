@@ -137,3 +137,22 @@ export const changeTaskStatus = async (taskId, status) => {
     return { error: error.message || "Something went wrong" };
   }
 };
+
+export const changeAssignee = async (taskId ,email) => {
+  const lang = localStorage.getItem('language') || 'en';
+  try {
+    const response = await fetch(`${API_URL}/changeAssignee/${taskId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "X-Language": lang
+      },
+      body: JSON.stringify({email}),
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return { error: error.message || "Something went wrong" };
+  }
+};

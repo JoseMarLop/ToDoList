@@ -12,7 +12,12 @@ import {
   CSpinner,
 } from "@coreui/react";
 import { useEffect, useState } from "react";
-import { getTask, updateTask, deleteTask } from "../../../data/task";
+import {
+  getTask,
+  updateTask,
+  deleteTask,
+  changeAssignee,
+} from "../../../data/task";
 import CIcon from "@coreui/icons-react";
 import {
   cilDescription,
@@ -31,13 +36,14 @@ import {
 import Subtasks from "./Subtasks";
 import Comments from "./Comments";
 
-const TaskModal = ({ visible, setVisible, task, refreshBoards}) => {
+const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
   // State variables for task details
   const [fullTask, setFullTask] = useState(null);
   const [originalTask, setOriginalTask] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isAssigning, setIsAssigning] = useState(false);
 
   // Effect hook to fetch task data when task ID is available
   useEffect(() => {
@@ -133,6 +139,8 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards}) => {
       return;
     } else {
       alert("Tarea editada correctamente");
+      const updatedTask = await getTask(fullTask.id); // Obtén la tarea actualizada
+      setOriginalTask(updatedTask); // Actualiza originalTask
       setVisible(false);
       refreshBoards();
     }
@@ -253,6 +261,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards}) => {
             >
               <div
                 className={`w-75 d-flex align-items-center gap-2 ${styles.task_option_div}`}
+                onClick={() => setIsAssigning(true)}
               >
                 <span>Asignar</span>
                 <CIcon icon={cilUser} />
@@ -270,6 +279,20 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards}) => {
                 <span>Borrar</span>
                 <CIcon icon={cilTrash} />
               </div>
+              <div className="d-flex flex-column w-75">
+                {fullTask.asigned_to ? (
+                  <>
+                    <span>Asignada a:</span>
+                    <span style={{ fontStyle: "italic", color: "lightgray" }}>
+                      {fullTask.asigned_to}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span style={{ color: "lightgray" }}>No asignada</span>
+                  </>
+                )}
+              </div>
             </section>
           </CModalBody>
 
@@ -279,6 +302,18 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards}) => {
               visible={isConfirmingDelete}
               setVisible={setIsConfirmingDelete}
               onConfirm={handleDeleteTask}
+            />
+          )}
+          {isAssigning && (
+            <AssignUserModal
+              visible={isAssigning}
+              setVisible={setIsAssigning}
+              taskId={fullTask.id}
+              onAssigned={async () => {
+                const updatedTask = await getTask(fullTask.id);
+                setFullTask(updatedTask);
+                setOriginalTask(updatedTask); // Añade esta línea para actualizar originalTask
+              }}
             />
           )}
         </>
@@ -319,6 +354,50 @@ const ConfirmDeleteModal = ({ visible, setVisible, onConfirm }) => {
           </button>
           <button className="btn btn-danger" onClick={handleConfirm}>
             Borrar
+          </button>
+        </div>
+      </CModalBody>
+    </CModal>
+  );
+};
+
+const AssignUserModal = ({ visible, setVisible, taskId, onAssigned }) => {
+  const [email, setEmail] = useState("");
+
+  const handleClose = () => {
+    setVisible(false);
+    setEmail("");
+  };
+
+  const handleAssign = async () => {
+    const result = await changeAssignee(taskId, email);
+    if (result.error) {
+      alert(result.error);
+    } else {
+      alert("Usuario asignado correctamente");
+      onAssigned(); // para recargar la tarea
+      handleClose();
+    }
+  };
+
+  return (
+    <CModal alignment="center" visible={visible} onClose={handleClose}>
+      <CModalHeader>
+        <CModalTitle>Asignar tarea a un usuario</CModalTitle>
+      </CModalHeader>
+      <CModalBody>
+        <CFormInput
+          type="email"
+          placeholder="Ingresa el email del usuario"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <div className="d-flex justify-content-end gap-3 mt-3">
+          <button className="btn btn-secondary" onClick={handleClose}>
+            Cancelar
+          </button>
+          <button className="btn btn-primary" onClick={handleAssign}>
+            Asignar
           </button>
         </div>
       </CModalBody>

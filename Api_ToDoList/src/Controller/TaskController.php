@@ -16,11 +16,12 @@ use App\Entity\Task;
 use App\Entity\Subtask;
 use App\Entity\Comment;
 use App\Repository\CommentRepository;
+use App\Repository\UserRepository;
 
 final class TaskController extends AbstractController
 {
 
-    public function __construct(private TaskRepository $taskRepository, private TableRepository $tableRepository, private SubtaskRepository $subtaskRepository, private CommentRepository $commentRepository) {}
+    public function __construct(private TaskRepository $taskRepository, private TableRepository $tableRepository, private SubtaskRepository $subtaskRepository, private CommentRepository $commentRepository, private UserRepository $userRepository) {}
 
     //Obtain a task with its subtasks
     #[Route('/api/task/{id}', name: 'getTask', methods: ['GET'])]
@@ -32,6 +33,16 @@ final class TaskController extends AbstractController
             return new JsonResponse(['message' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
+        $table = $task->getTableId();
+        $members = [];
+    
+        foreach ($table->getMembers() as $member) {
+            $members[] = [
+                'id' => $member->getUser()->getId(),
+                'email' => $member->getUser()->getEmail(),
+            ];
+        }
+
         $data = [
             'id' => $task->getId(),
             'title' => $task->getTitle(),
@@ -40,7 +51,9 @@ final class TaskController extends AbstractController
             'created_at' => $task->getCreatedAt(),
             'priority' => $task->getPriority(),
             'due_at' => $task->getDueAt(),
-            'table_id' => $task->getTableId()->getId()
+            'table_id' => $table->getId(),
+            'asigned_to' => $task->getAssigneeId() ? $task->getAssigneeId()->getEmail() : null,
+            'members' => $members,
         ];
 
         return new JsonResponse($data, JsonResponse::HTTP_OK);
@@ -257,6 +270,36 @@ final class TaskController extends AbstractController
         $entityManager->flush();
         return new JsonResponse(['message' => 'Task status updated'], JsonResponse::HTTP_OK);
     }
+
+    #[Route('/api/changeAssignee/{id}', name: 'changeAssignee', methods: ['PUT'])]
+    public function changeAssignee(EntityManagerInterface $entityManager, Request $request, int $id): JsonResponse{
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        $task = $this->taskRepository->findOneBy(['id' => $id]);
+        if (!$task) {
+            return new JsonResponse(['error' => 'Task not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $userAssignee = $this->userRepository->findOneBy(['email' => $data['email']]);
+        if (!$userAssignee) {
+            return new JsonResponse(['error' => 'Assignee not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $task->setAssigneeId($userAssignee);
+        $userAssignee->addAssignedTask($task);
+        $entityManager->persist($task);
+        $entityManager->persist($userAssignee);
+        $entityManager->flush();
+
+        return new JsonResponse(['message' => 'Assignee updated'], JsonResponse::HTTP_OK);
+    }
+
 
 
     #[Route('/api/comments/{task_id}', name: 'getTaskComments', methods: ['GET'])]

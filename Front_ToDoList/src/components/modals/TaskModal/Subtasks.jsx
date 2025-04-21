@@ -24,12 +24,12 @@ const Subtasks = ({ fullTask }) => {
     try {
         const result = await getSubtasks(fullTask.id); 
         if (result.error) {
-            alert(result.error); 
+            console.log(result.error); 
         } else {
             setSubtasks(result); 
         }
     } catch (error) {
-        alert("Error al obtener las subtareas");
+        console.log("Error al obtener las subtareas");
         console.error(error);
     }
 };
@@ -69,13 +69,12 @@ const Subtasks = ({ fullTask }) => {
 
   const handleDeleteSubtask = async (subtaskId) => {
 
-    // console.log("Click hecho en id:" + subtaskId)
     const result = deleteSubtask(subtaskId);
 
     if(result.error){
-        alert(result.error);
+        console.log(result.error);
     }else{
-        alert("Borrado exitoso");
+        // alert("Borrado exitoso");
         handleSubtasks();
     }
   }

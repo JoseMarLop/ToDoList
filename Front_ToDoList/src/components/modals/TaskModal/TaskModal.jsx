@@ -138,7 +138,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
       alert(result.error);
       return;
     } else {
-      alert("Tarea editada correctamente");
+      // alert("Tarea editada correctamente");
       const updatedTask = await getTask(fullTask.id); // Obtén la tarea actualizada
       setOriginalTask(updatedTask); // Actualiza originalTask
       setVisible(false);
@@ -312,7 +312,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
               onAssigned={async () => {
                 const updatedTask = await getTask(fullTask.id);
                 setFullTask(updatedTask);
-                setOriginalTask(updatedTask); // Añade esta línea para actualizar originalTask
+                setOriginalTask(updatedTask);
               }}
             />
           )}
@@ -374,8 +374,8 @@ const AssignUserModal = ({ visible, setVisible, taskId, onAssigned }) => {
     if (result.error) {
       alert(result.error);
     } else {
-      alert("Usuario asignado correctamente");
-      onAssigned(); // para recargar la tarea
+      // alert("Usuario asignado correctamente");
+      onAssigned();
       handleClose();
     }
   };

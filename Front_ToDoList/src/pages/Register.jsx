@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { register } from "../data/auth";
 import { CSpinner } from "@coreui/react";
+import Header from "../components/header/Header";
 const Register = () => {
   const navigate = useNavigate();
   function handleClick(e) {
@@ -59,6 +60,8 @@ const Register = () => {
   };
 
   return (
+    <>
+    <Header/>
     <div className={styles.login_container}>
       <div className={styles.login_box}>
         {loading ? (
@@ -116,6 +119,7 @@ const Register = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

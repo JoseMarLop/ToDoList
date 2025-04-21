@@ -52,7 +52,7 @@ const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
       setError(result.error);
       return;
     } else {
-      alert("Tablero añadido correctamente");
+      // alert("Tablero añadido correctamente");
       refreshBoards();
       setVisible(false);
     }
@@ -69,7 +69,7 @@ const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
       setError(result.error);
       return;
     } else {
-      alert("Tablero actualizado correctamente");
+      // alert("Tablero actualizado correctamente");
       refreshBoards();
       setVisible(false);
     }
@@ -81,7 +81,7 @@ const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
       setError(result.error);
       return;
     } else {
-      alert("Tablero eliminado correctamente");
+      // alert("Tablero eliminado correctamente");
       refreshBoards();
       setDeleteConfirmVisible(false);
       setVisible(false);

@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { login } from "../data/auth";
 import { CSpinner } from "@coreui/react";
+import Header from "../components/header/Header";
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,6 +36,8 @@ const Login = () => {
     setLoading(false);
   };
   return (
+    <>
+    <Header/>
     <div className={styles.login_container}>
       <div className={styles.login_box}>
         {loading ? (
@@ -78,6 +82,7 @@ const Login = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

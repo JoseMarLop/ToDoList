@@ -9,6 +9,7 @@ const Login = React.lazy(() => import('./pages/Login'));
 const Register = React.lazy(() => import('./pages/Register'));
 const Welcome = React.lazy(() => import('./pages/Welcome'));
 const Dashboard = React.lazy(() => import('./pages/dashboard/Dashboard'));
+const Settings = React.lazy(() => import('./pages/Setting'));
 
 const App = () => {
 
@@ -59,6 +60,14 @@ const App = () => {
               element={
                 <RouteGuard>
                   <Dashboard/>
+                </RouteGuard>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <RouteGuard>
+                  <Settings/>
                 </RouteGuard>
               }
             />

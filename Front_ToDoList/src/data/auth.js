@@ -1,4 +1,6 @@
 const API_URL = 'http://localhost:8080/api';
+const token = localStorage.getItem("token");
+
 
 export const login = async (email, password) => {
     try {
@@ -19,11 +21,10 @@ export const login = async (email, password) => {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
-        // localStorage.setItem("roles", JSON.stringify(data.roles));
-        localStorage.setItem('email',data.email)  // Asegúrate de convertir los roles a string
+        localStorage.setItem('email',data.email)  
       }
 
-      return { data }; // Devuelve los datos si la respuesta es exitosa
+      return { data };
     } catch (error) {
       return { error: error.message || 'Something went wrong' };
     }
@@ -54,6 +55,44 @@ export const logout = () => {
     localStorage.removeItem("email");
     window.location.reload();
 }
+
+export const updatePassword = async (passwordData)=>{
+  try{
+    const response = await fetch(`${API_URL}/changePassword`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(passwordData),
+    });
+
+    const data = await response.json();
+
+    return { data };
+  } catch (error){
+    return { error: error.message || 'Something went wrong' };
+  }
+}
+
+export const updateEmail = async (emailData) => {
+  try {
+    const response = await fetch(`${API_URL}/changeEmail`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(emailData),
+    });
+
+    const data = await response.json();
+
+    return { data };
+  } catch (error) {
+    return { error: error.message || 'Something went wrong' };
+  }
+};
 
 export const getToken = () => {
     return localStorage.getItem("token");

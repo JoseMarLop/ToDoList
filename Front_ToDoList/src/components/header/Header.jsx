@@ -17,7 +17,7 @@ import {
   CNavbarNav,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
-import { cilLockLocked, cilMenu, cilUser } from "@coreui/icons";
+import { cilLockLocked, cilMenu, cilSettings, cilUser } from "@coreui/icons";
 import { useState } from "react";
 
 import spanish from "../../assets/spanish.png";
@@ -31,7 +31,8 @@ import { useTranslation } from "react-i18next";
 import styles from "./Header.module.scss";
 
 import { isAuthenticated, logout } from "../../data/auth";
-
+import ChangePassmodal from "../modals/changePassModal/ChangePassmodal"
+import ChangeEmailModal from "../modals/changeEmailModal/ChangeEmailmodal";
 const Header = () => {
   const { t } = useTranslation();
 
@@ -50,7 +51,19 @@ const Header = () => {
 
   const email = localStorage.getItem("email");
 
+  const [changePassModalVisible, setChangePassModalVisible] = useState(false);
+  const [changeEmailModalVisible, setChangeEmailModalVisible] = useState(false);
+
   return (
+    <>
+    <ChangePassmodal
+      visible={changePassModalVisible}
+      setVisible={setChangePassModalVisible}
+    />
+    <ChangeEmailModal
+      visible={changeEmailModalVisible}
+      setVisible={setChangeEmailModalVisible}
+    />
     <CHeader
       position="sticky"
       className={`${styles.header} p-0 py-3 border-bottom shadow-sm`}
@@ -112,6 +125,32 @@ const Header = () => {
               )}
             </CDropdownMenu>
           </CDropdown>
+
+          
+          {authenticated && (
+            <CDropdown
+              variant="nav-item"
+              placement="bottom-start"
+              className="ms-2"
+            >
+              <CDropdownToggle caret={false}>
+                <CIcon
+                  icon={cilSettings}
+                  size="lg"
+                  className={styles.navlink}
+                />
+              </CDropdownToggle>
+              <CDropdownMenu>
+                <CDropdownItem as="button" onClick={() => setChangePassModalVisible(true)}>
+                  <CIcon icon={cilLockLocked} className="me-2" /> Cambiar
+                  contraseña
+                </CDropdownItem>
+                <CDropdownItem as='button' onClick={() => setChangeEmailModalVisible(true)}>
+                  <CIcon icon={cilUser} className="me-2" /> Editar email
+                </CDropdownItem>
+              </CDropdownMenu>
+            </CDropdown>
+          )}
         </CHeaderNav>
         <CHeaderNav>
           <li className="nav-item py-1">
@@ -151,6 +190,7 @@ const Header = () => {
       </CContainer>
       <CContainer className="px-4" fluid></CContainer>
     </CHeader>
+    </>
   );
 };
 

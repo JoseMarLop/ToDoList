@@ -71,6 +71,7 @@ const KanbanBoard = ({ board, refreshBoards }) => {
           // Si hay un error, podrías revertir la actualización del frontend
         } else {
           console.log("Tarea actualizada correctamente", data.message);
+          refreshBoards(); // ← Fuerza recarga del tablero actualizado
         }
       })
       .catch((error) => {

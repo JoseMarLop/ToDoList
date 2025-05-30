@@ -32,6 +32,7 @@ const Login = () => {
       setError(response.error);
     } else {
       navigate("/welcome");
+      window.location.reload();
     }
     setLoading(false);
   };

@@ -35,20 +35,24 @@ const ChangeEmailModal = ({ visible, setVisible }) => {
   const handleSave = async (e) => {
     e.preventDefault();
 
-    if(emailData.password.trim() === "" || emailData.newEmail.trim() === "" || emailData.repeatEmail.trim() === "") {
+    if (
+      emailData.password.trim() === "" ||
+      emailData.newEmail.trim() === "" ||
+      emailData.repeatEmail.trim() === ""
+    ) {
       setError("All fields are required");
       return;
-    };
+    }
 
-    if(emailData.newEmail !== emailData.repeatEmail) {
+    if (emailData.newEmail !== emailData.repeatEmail) {
       setError("Emails do not match");
       return;
-    };
-    
+    }
+
     const response = await updateEmail(emailData);
 
-    if (response.data.error) {
-      setError(response.data.error);
+    if (response.error) {
+      setError(response.error);
       return;
     } else {
       alert("Email updated successfully");

@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
 final class LoginController extends AbstractController
@@ -120,43 +121,58 @@ final class LoginController extends AbstractController
     }
 
     #[Route('/api/changeEmail', name: 'app_changeemail', methods: ['PUT'])]
-    public function changeEmail(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): JsonResponse
-    {
+    public function changeEmail(
+        Request $request,
+        UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage
+    ): JsonResponse {
         $data = json_decode($request->getContent(), true);
-
+    
         if (!isset($data['password']) || !isset($data['newEmail'])) {
-            return new JsonResponse(
-                ['error' => 'Password and new email are required'],
-                Response::HTTP_BAD_REQUEST
-            );
+            return new JsonResponse(['error' => 'Password and new email are required'], Response::HTTP_BAD_REQUEST);
         }
-
-        /** @var User $user */
-        $user = $this->getUser();
+    
+        $token = $tokenStorage->getToken();
+    
+        if (!$token || !$token->getUser()) {
+            return new JsonResponse(['error' => 'Invalid token or user not authenticated'], Response::HTTP_UNAUTHORIZED);
+        }
+    
+        // ✅ Obtener el usuario autenticado desde el token
+        $userFromToken = $token->getUser();
+    
+        // Si estás usando un User personalizado, verifica que es una instancia de tu clase User
+        if (!$userFromToken instanceof User) {
+            return new JsonResponse(['error' => 'Invalid user type'], Response::HTTP_UNAUTHORIZED);
+        }
+    
+        // Buscar el usuario por email actualizado
+        $user = $entityManager->getRepository(User::class)->findOneBy(['email' => $userFromToken->getEmail()]);
+    
         if (!$user) {
             return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
-
-
+    
         if (!$passwordHasher->isPasswordValid($user, $data['password'])) {
             return new JsonResponse(['error' => 'Invalid password'], Response::HTTP_UNAUTHORIZED);
         }
-
+    
         $newEmail = trim(strtolower($data['newEmail']));
-
         $existingUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $newEmail]);
+    
         if ($existingUser && $existingUser->getId() !== $user->getId()) {
             return new JsonResponse(['error' => 'Email already in use'], Response::HTTP_CONFLICT);
         }
-
+    
         if ($newEmail === strtolower($user->getEmail())) {
             return new JsonResponse(['error' => 'New email is the same as current email'], Response::HTTP_BAD_REQUEST);
         }
-
+    
         $user->setEmail($newEmail);
         $entityManager->persist($user);
         $entityManager->flush();
-
+    
         return new JsonResponse(['message' => 'Email changed successfully'], Response::HTTP_OK);
     }
 }

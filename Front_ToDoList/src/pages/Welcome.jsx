@@ -34,7 +34,7 @@ const Welcome = () => {
         className={styles.features_section}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.5 }} // Aparece al hacer scroll
+        viewport={{ once: true, amount: 0.5 }} 
       >
         <motion.article variants={fadeInUp}>
           <p>ToDoList</p>

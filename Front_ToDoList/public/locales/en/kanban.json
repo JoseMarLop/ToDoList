@@ -1,0 +1,9 @@
+{
+    "members": "Members",
+    "addTask": "Add task",
+    "filterPriority": "Filter by priority",
+    "lowPriority": "Low priority",
+    "mediumPriority": "Medium priority",
+    "highPriority": "High priority",
+    "allTasks": "All"
+}

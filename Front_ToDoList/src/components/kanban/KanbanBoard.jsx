@@ -8,8 +8,11 @@ import NewTaskModal from "../modals/NewTaskModal/NewTaskModal.jsx";
 import MemberModal from "../modals/MemberModal/MemberModal";
 import { changeTaskStatus } from "../../data/task";
 import styles from "./KanbanBoard.module.scss";
+import { useTranslation } from "react-i18next";
 
 const KanbanBoard = ({ board, refreshBoards }) => {
+    const { t } = useTranslation(); // Hook for translations
+  
   const [columns, setColumns] = useState({
     todo: [],
     doing: [],
@@ -69,7 +72,6 @@ const KanbanBoard = ({ board, refreshBoards }) => {
             data.error
           );
         } else {
-          console.log("Tarea actualizada correctamente", data.message);
           refreshBoards(); 
         }
       })
@@ -121,7 +123,7 @@ const KanbanBoard = ({ board, refreshBoards }) => {
           onClick={() => setMemberModalVisible(true)}
         >
           <CIcon icon={cilUser} size="lg" className={styles.board_text} />
-          <span className={styles.board_text}>Miembros</span>
+          <span className={styles.board_text}>{t("kanban:members")}</span>
         </div>
         <div
           className="d-flex flex-row align-items-center gap-2 mb-3"
@@ -129,19 +131,19 @@ const KanbanBoard = ({ board, refreshBoards }) => {
           onClick={() => setTaskModalVisible(true)}
         >
           <CIcon icon={cilPlus} size="lg" className={styles.board_text} />
-          <span className={styles.board_text}>Añadir tarea</span>
+          <span className={styles.board_text}>{t("kanban:addTask")}</span>
         </div>
         <div className="mb-3">
-          <label className={styles.board_text}>Filtrar por prioridad:</label>
+          <label className={styles.board_text}>{t("kanban:filterPriority")}</label>
           <select
             className="form-select w-auto ms-2 d-inline"
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
           >
-            <option value="all">Todas</option>
-            <option value="1">Prioridad baja</option>
-            <option value="2">Prioridad media</option>
-            <option value="3">Prioridad alta</option>
+            <option value="all">{t("kanban:allTasks")}</option>
+            <option value="1">{t("kanban:lowPriority")}</option>
+            <option value="2">{t("kanban:mediumPriority")}</option>
+            <option value="3">{t("kanban:highPriority")}</option>
           </select>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>

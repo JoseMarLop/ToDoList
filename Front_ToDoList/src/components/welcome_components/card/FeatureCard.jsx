@@ -9,7 +9,7 @@ const FeatureCard = ({ title, text, index }) => {
       <div className={styles.feature_card}>
         <div
           className={styles.feature_card_color_bar}
-          style={{ backgroundColor: color }} // Se aplica el color dinámico
+          style={{ backgroundColor: color }} 
         />
         <div className={styles.feature_card_textbox}>
           <h4>{title}</h4>

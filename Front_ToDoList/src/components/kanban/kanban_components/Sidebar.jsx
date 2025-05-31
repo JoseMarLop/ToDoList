@@ -14,8 +14,11 @@ import CIcon from "@coreui/icons-react";
 import { cilFolder, cilGroup, cilPlus } from "@coreui/icons";
 import TableModal from "../../modals/TableModal/TableModal";
 import styles from "./Sidebar.module.scss";
+import { useTranslation } from "react-i18next"; 
 
 const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
+  const { t } = useTranslation(); // Hook for translations
+
   const [visible, setVisible] = React.useState(false);
 
   return (
@@ -39,7 +42,7 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
                     icon={cilFolder}
                     style={{ color: "lightgray" }}
                   />
-                  <span style={{ color: "lightgray" }}>Mis tableros</span>
+                  <span style={{ color: "lightgray" }}>{t("sidebar:myBoards")}</span>
                 </div>
               }
             >
@@ -69,7 +72,7 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
                     icon={cilGroup}
                     style={{ color: "lightgray" }}
                   />
-                  <span style={{ color: "lightgray" }}>Equipos</span>
+                  <span style={{ color: "lightgray" }}>{t("sidebar:teamBoards")}</span>
                 </>
               }
             >
@@ -96,7 +99,7 @@ const Sidebar = ({ boards, setSelectedBoard, refreshBoards }) => {
               icon={cilPlus}
               style={{ color: "lightgray" }}
             />
-            <span style={{ color: "lightgray" }}>Añadir tablero</span>
+            <span style={{ color: "lightgray" }}>{t("sidebar:addBoard")}</span>
           </CNavItem>
         </CSidebarNav>
       </CSidebar>

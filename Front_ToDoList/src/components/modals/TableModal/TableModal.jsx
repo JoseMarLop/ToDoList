@@ -4,7 +4,6 @@ import {
   CFormInput,
   CFormTextarea,
   CInputGroup,
-  CInputGroupText,
   CModal,
   CModalBody,
   CModalFooter,
@@ -15,7 +14,7 @@ import React, { useState } from "react";
 
 import { addTable, updateTable, deleteTable } from "../../../data/table";
 import CIcon from "@coreui/icons-react";
-import { cilCommentBubble, cilShortText, cilTrash } from "@coreui/icons";
+import { cilTrash } from "@coreui/icons";
 import styles from "./TableModal.module.scss";
 
 const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
@@ -52,7 +51,6 @@ const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
       setError(result.error);
       return;
     } else {
-      // alert("Tablero añadido correctamente");
       refreshBoards();
       setVisible(false);
     }
@@ -81,7 +79,6 @@ const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
       setError(result.error);
       return;
     } else {
-      // alert("Tablero eliminado correctamente");
       refreshBoards();
       setDeleteConfirmVisible(false);
       setVisible(false);

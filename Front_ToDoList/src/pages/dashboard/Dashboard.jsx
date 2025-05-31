@@ -9,8 +9,11 @@ import useWindowWidth from "../../hooks/useWindowWidth";
 import UnsupportedScreen from "../../components/unsupported_screen/UnsupportedScreen";
 
 import Sidebar from "../../components/kanban/kanban_components/Sidebar";
+import { useTranslation } from "react-i18next"; // Importing the translation hook
 
 const Dashboard = () => {
+  const { t } = useTranslation(); // Hook for translations
+
   const [selectedBoard, setSelectedBoard] = React.useState(null);
   const [boards, setBoards] = React.useState({ owned: [], member: [] });
 
@@ -77,7 +80,7 @@ const Dashboard = () => {
                   color: "#ffffff",
                 }}
               >
-                No tienes tableros todavía
+                {t("dashboard:noBoards")}
               </h2>
               <p
                 style={{
@@ -86,7 +89,7 @@ const Dashboard = () => {
                   color: "#cccccc",
                 }}
               >
-                Crea un nuevo tablero para comenzar a organizar tus tareas.
+                {t("dashboard:createBoard")}
               </p>
             </div>
           )}

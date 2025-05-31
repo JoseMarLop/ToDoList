@@ -35,7 +35,7 @@ final class TaskController extends AbstractController
 
         $table = $task->getTableId();
         $members = [];
-    
+
         foreach ($table->getMembers() as $member) {
             $members[] = [
                 'id' => $member->getUser()->getId(),
@@ -272,7 +272,8 @@ final class TaskController extends AbstractController
     }
 
     #[Route('/api/changeAssignee/{id}', name: 'changeAssignee', methods: ['PUT'])]
-    public function changeAssignee(EntityManagerInterface $entityManager, Request $request, int $id): JsonResponse{
+    public function changeAssignee(EntityManagerInterface $entityManager, Request $request, int $id): JsonResponse
+    {
         /** @var User $user */
         $user = $this->getUser();
         if (!$user) {
@@ -289,6 +290,21 @@ final class TaskController extends AbstractController
         $userAssignee = $this->userRepository->findOneBy(['email' => $data['email']]);
         if (!$userAssignee) {
             return new JsonResponse(['error' => 'Assignee not found'], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $table = $task->getTableId();
+        $members = $table->getMembers();
+
+        $isMember = false;
+        foreach ($members as $member) {
+            if ($member->getUser()->getId() === $userAssignee->getId()) {
+                $isMember = true;
+                break;
+            }
+        }
+
+        if (!$isMember) {
+            return new JsonResponse(['error' => 'User is not a member of the table'], JsonResponse::HTTP_FORBIDDEN);
         }
 
         $task->setAssigneeId($userAssignee);

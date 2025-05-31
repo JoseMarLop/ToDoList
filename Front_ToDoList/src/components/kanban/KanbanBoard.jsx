@@ -36,7 +36,7 @@ const KanbanBoard = ({ board, refreshBoards }) => {
 
       setColumns(tasksByStatus);
     }
-  }, [board, priorityFilter]); // ← importante que escuche también a priorityFilter
+  }, [board, priorityFilter]); 
 
   function handleDragEnd(event) {
     const { active, over } = event;
@@ -68,15 +68,13 @@ const KanbanBoard = ({ board, refreshBoards }) => {
             "Error al actualizar el estado de la tarea",
             data.error
           );
-          // Si hay un error, podrías revertir la actualización del frontend
         } else {
           console.log("Tarea actualizada correctamente", data.message);
-          refreshBoards(); // ← Fuerza recarga del tablero actualizado
+          refreshBoards(); 
         }
       })
       .catch((error) => {
         console.error("Error en la solicitud de cambio de estado", error);
-        // Si ocurre un error, también podrías revertir la actualización del frontend
       });
   }
 
@@ -144,7 +142,6 @@ const KanbanBoard = ({ board, refreshBoards }) => {
             <option value="1">Prioridad baja</option>
             <option value="2">Prioridad media</option>
             <option value="3">Prioridad alta</option>
-            {/* puedes agregar más niveles si los tienes */}
           </select>
         </div>
         <div style={{ display: "flex", gap: "10px" }}>

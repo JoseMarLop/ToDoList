@@ -58,7 +58,37 @@ const Dashboard = () => {
               />
             )
           ) : (
-            <p>Selecciona un tablero</p>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                padding: "2rem",
+                textAlign: "center",
+                color: "#f0f0f0",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "1.8rem",
+                  marginBottom: "0.5rem",
+                  color: "#ffffff",
+                }}
+              >
+                No tienes tableros todavía
+              </h2>
+              <p
+                style={{
+                  fontSize: "1rem",
+                  marginBottom: "1.5rem",
+                  color: "#cccccc",
+                }}
+              >
+                Crea un nuevo tablero para comenzar a organizar tus tareas.
+              </p>
+            </div>
           )}
         </main>
       </div>

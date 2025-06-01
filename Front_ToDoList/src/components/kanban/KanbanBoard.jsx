@@ -126,7 +126,7 @@ const KanbanBoard = ({ board, refreshBoards }) => {
           <span className={styles.board_text}>{t("kanban:members")}</span>
         </div>
         <div
-          className="d-flex flex-row align-items-center gap-2 mb-3"
+          className="w-25 d-flex flex-row align-items-center gap-2 mb-3"
           style={{ cursor: "pointer" }}
           onClick={() => setTaskModalVisible(true)}
         >

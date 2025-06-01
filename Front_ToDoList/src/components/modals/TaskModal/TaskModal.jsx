@@ -33,10 +33,13 @@ import {
   FcMediumPriority,
 } from "react-icons/fc";
 
+import { useTranslation } from "react-i18next";
+
 import Subtasks from "./Subtasks";
 import Comments from "./Comments";
 
 const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
+  const { t } = useTranslation();
   // State variables for task details
   const [fullTask, setFullTask] = useState(null);
   const [originalTask, setOriginalTask] = useState(null);
@@ -44,6 +47,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
   const [description, setDescription] = useState("");
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isAssigning, setIsAssigning] = useState(false);
+  const [error, setError] = useState(null);
 
   // Effect hook to fetch task data when task ID is available
   useEffect(() => {
@@ -51,7 +55,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
       const handleTask = async () => {
         const result = await getTask(task.id);
         if (result.error) {
-          alert(result.error);
+          setError(result.error);
         } else {
           setFullTask(result);
           setOriginalTask(result);
@@ -79,7 +83,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
   const handleTitleBlur = () => {
     if (title.trim() === "") {
       setTitle(originalTask?.title || "");
-      alert("El título no puede estar vacío.");
+      setError("El título no puede estar vacío.");
     } else {
       setIsEditingTitle(false);
       setFullTask((prevTask) => ({
@@ -128,6 +132,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
     setTitle(originalTask?.title);
     setDescription(originalTask?.description);
     setVisible(false);
+    setError(null);
   };
 
   // Function to save task after editing
@@ -135,14 +140,14 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
     e.preventDefault();
     const result = await updateTask(fullTask, fullTask.id);
     if (result.error) {
-      alert(result.error);
+      setError(result.error);
       return;
     } else {
-      // alert("Tarea editada correctamente");
-      const updatedTask = await getTask(fullTask.id); // Obtén la tarea actualizada
-      setOriginalTask(updatedTask); // Actualiza originalTask
+      const updatedTask = await getTask(fullTask.id);
+      setOriginalTask(updatedTask);
       setVisible(false);
       refreshBoards();
+      setError(null);
     }
   };
 
@@ -199,19 +204,19 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
                         style={{ color: "white" }}
                         onClick={() => handlePriorityChange("1")}
                       >
-                        <FcLowPriority /> Baja
+                        <FcLowPriority /> {t("modal:low")}
                       </CDropdownItem>
                       <CDropdownItem
                         style={{ color: "white" }}
                         onClick={() => handlePriorityChange("2")}
                       >
-                        <FcMediumPriority /> Media
+                        <FcMediumPriority /> {t("modal:medium")}
                       </CDropdownItem>
                       <CDropdownItem
                         style={{ color: "white" }}
                         onClick={() => handlePriorityChange("3")}
                       >
-                        <FcHighPriority /> Alta
+                        <FcHighPriority /> {t("modal:high")}
                       </CDropdownItem>
                     </CDropdownMenu>
                   </CDropdown>
@@ -226,7 +231,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
                 className={`${styles.description_div} d-flex align-items-center gap-2 mb-3`}
               >
                 <CIcon icon={cilDescription} size="xl" />
-                <span>Description</span>
+                <span>{t("modal:description")}</span>
               </div>
               <div className="mb-3">
                 {isEditingDescription ? (
@@ -241,7 +246,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
                     onClick={handleDescriptionClick}
                     style={{ color: description ? "lightgray" : "gray" }}
                   >
-                    {description ? description : "No hay descripción"}
+                    {description ? description : t("modal:noDescription")}
                   </span>
                 )}
               </div>
@@ -263,33 +268,35 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
                 className={`w-75 d-flex align-items-center gap-2 ${styles.task_option_div}`}
                 onClick={() => setIsAssigning(true)}
               >
-                <span>Asignar</span>
+                <span>{t("modal:assign")}</span>
                 <CIcon icon={cilUser} />
               </div>
               <div
                 className={`w-75 d-flex align-items-center gap-2 ${styles.task_option_div}`}
               >
-                <span onClick={handleSave}>Guardar</span> {/* Trigger save */}
+                <span onClick={handleSave}>{t("modal:save")}</span>
                 <CIcon icon={cilPencil} />
               </div>
               <div
                 className={`w-75 d-flex align-items-center gap-2 ${styles.task_option_div}`}
                 onClick={() => setIsConfirmingDelete(true)}
               >
-                <span>Borrar</span>
+                <span>{t("modal:delete")}</span>
                 <CIcon icon={cilTrash} />
               </div>
               <div className="d-flex flex-column w-75">
                 {fullTask.asigned_to ? (
                   <>
-                    <span>Asignada a:</span>
+                    <span>{t("modal:assigned")}</span>
                     <span style={{ fontStyle: "italic", color: "lightgray" }}>
                       {fullTask.asigned_to}
                     </span>
                   </>
                 ) : (
                   <>
-                    <span style={{ color: "lightgray" }}>No asignada</span>
+                    <span style={{ color: "lightgray" }}>
+                      {t("modal:noAssigned")}
+                    </span>
                   </>
                 )}
               </div>
@@ -320,7 +327,7 @@ const TaskModal = ({ visible, setVisible, task, refreshBoards }) => {
       ) : (
         <div>
           <CSpinner />
-          Cargando...
+          {t("modal:loading")}
         </div>
       )}
     </CModal>
@@ -374,7 +381,6 @@ const AssignUserModal = ({ visible, setVisible, taskId, onAssigned }) => {
     if (result.error) {
       alert(result.error);
     } else {
-      // alert("Usuario asignado correctamente");
       onAssigned();
       handleClose();
     }

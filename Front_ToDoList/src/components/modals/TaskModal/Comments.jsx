@@ -1,4 +1,4 @@
-import { cilPencil, cilSpeech, cilTrash, cilUser } from "@coreui/icons";
+import { cilSpeech, cilTrash, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
 import {
   CButton,
@@ -6,16 +6,19 @@ import {
   CModal,
   CModalBody,
   CModalFooter,
-  CPopover,
 } from "@coreui/react";
 import styles from "./TaskModal.module.scss";
 import { getComments, addComment, deleteComment } from "../../../data/comment";
 import { useEffect, useState } from "react";
+import {useTranslation} from "react-i18next";
+
 
 const Comments = ({ fullTask }) => {
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
+  const [error, setError] = useState(null);
 
   const fetchComments = async () => {
     if (fullTask?.id) {
@@ -43,7 +46,7 @@ const Comments = ({ fullTask }) => {
         setContent("");
         await fetchComments();
       } else {
-        console.error("Error al añadir comentario:", result.error);
+        setError("Error al añadir comentario:", result.error);
       }
 
       setLoading(false);
@@ -59,7 +62,7 @@ const Comments = ({ fullTask }) => {
     if (!result.error) {
       await fetchComments();
     } else {
-      alert("Error al eliminar comentario:", result.error);
+      setError(result.error);
     }
   };
 
@@ -70,7 +73,7 @@ const Comments = ({ fullTask }) => {
         className={`${styles.comments_div} d-flex align-items-center gap-2 mb-3`}
       >
         <CIcon icon={cilSpeech} size="xl" />
-        <span>Comments</span>
+        <span>{t("modal:comments")}</span>
       </div>
       <div className="d-flex align-items-center gap-3">
         <div className={styles.user_icon}>@</div>
@@ -80,7 +83,7 @@ const Comments = ({ fullTask }) => {
           onChange={handleCommentChange}
           onKeyDown={handleKeyDown}
           disabled={loading}
-          placeholder="Escribe un comentario y presiona Enter"
+          placeholder={t("modal:writeComment")}
         />
       </div>
 
@@ -121,11 +124,11 @@ const Comments = ({ fullTask }) => {
 
       <CModal visible={showModal} onClose={() => setShowModal(false)}>
         <CModalBody>
-          ¿Estás seguro de que quieres eliminar este comentario?
+        {t("modal:deleteComment")}
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setShowModal(false)}>
-            Cancelar
+          {t("modal:cancel")}
           </CButton>
           <CButton
             color="danger"
@@ -135,14 +138,14 @@ const Comments = ({ fullTask }) => {
                 if (!result.error) {
                   await fetchComments();
                 } else {
-                  alert("Error al eliminar comentario:", result.error);
+                  setError("Error al eliminar comentario:", result.error);
                 }
               }
               setShowModal(false);
               setCommentToDelete(null);
             }}
           >
-            Eliminar
+            {t("modal:delete")}
           </CButton>
         </CModalFooter>
       </CModal>

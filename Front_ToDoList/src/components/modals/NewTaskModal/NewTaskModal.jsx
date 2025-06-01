@@ -1,12 +1,9 @@
-import { cilCommentBubble, cilDescription } from "@coreui/icons";
-import CIcon from "@coreui/icons-react";
 import {
   CButton,
   CForm,
   CFormInput,
   CFormTextarea,
   CInputGroup,
-  CInputGroupText,
   CModal,
   CModalBody,
   CModalFooter,
@@ -21,14 +18,19 @@ import {
   FcLowPriority,
   FcMediumPriority,
 } from "react-icons/fc";
+import { useTranslation } from "react-i18next";
 
 const NewTaskModal = ({ visible, setVisible, board, refreshBoards }) => {
+  const { t } = useTranslation();
+
   const [taskData, setTaskData] = useState({
     title: "",
     description: "",
     priority: "1",
     table_id: board.id,
   });
+
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setTaskData((prevData) => ({
@@ -43,22 +45,26 @@ const NewTaskModal = ({ visible, setVisible, board, refreshBoards }) => {
       ...prevData,
       [name]: value,
     }));
+
+    if (name === "title" && error) {
+      setError(null);
+    }
   };
 
   const handleAddTask = async (e) => {
     e.preventDefault();
     if (taskData.title.trim() === "") {
-      alert("El título de la tarea no puede estar en blanco");
+      setError(t("modal:nonEmptyError"));
       return;
     }
-    console.log("taskData antes de la solicitud:", taskData);
     const result = await addTask(taskData);
     if (result.error) {
-      alert(result.error);
+      setError(result.error);
       return;
     } else {
       refreshBoards();
       setVisible(false);
+      setError(null);
     }
   };
 
@@ -79,10 +85,19 @@ const NewTaskModal = ({ visible, setVisible, board, refreshBoards }) => {
     <CModal
       alignment="center"
       visible={visible}
-      onClose={() => setVisible(false)}
+      onClose={() => {
+        setVisible(false);
+        setError(null);
+        setTaskData({
+          title: "",
+          description: "",
+          priority: "1",
+          table_id: board.id,
+        });
+      }}
     >
       <CModalHeader className={styles.modal_header}>
-        <CModalTitle>Añadir tarea</CModalTitle>
+        <CModalTitle>{t("modal:addTask")}</CModalTitle>
       </CModalHeader>
       <CModalBody className={styles.modal_body}>
         <CForm>
@@ -92,18 +107,28 @@ const NewTaskModal = ({ visible, setVisible, board, refreshBoards }) => {
               name="title"
               value={taskData.title}
               onChange={handleChange}
-              placeholder="Título"
+              placeholder={t("modal:title")}
               className={styles.task_input}
             />
           </CInputGroup>
-
+          {error && (
+            <div
+              style={{
+                color: "red",
+                fontSize: "12px",
+                marginBottom: "0.75rem",
+              }}
+            >
+              {error}
+            </div>
+          )}
           {/* Description */}
           <CInputGroup className="mb-3">
             <CFormTextarea
               name="description"
               value={taskData.description}
               onChange={handleChange}
-              placeholder="Descripción"
+              placeholder={t("modal:description")}
               className={styles.task_input}
             />
           </CInputGroup>
@@ -111,7 +136,7 @@ const NewTaskModal = ({ visible, setVisible, board, refreshBoards }) => {
           {/* Priority */}
           <div className="mb-3 w-50">
             <div className="d-flex flex-row align-items-center mb-2">
-              <span className="me-3">Prioridad</span>
+              <span className="me-3">{t("modal:priority")}</span>
               {getPriorityIcon()}
             </div>
             <CInputGroup>
@@ -121,9 +146,9 @@ const NewTaskModal = ({ visible, setVisible, board, refreshBoards }) => {
                 value={taskData.priority}
                 onChange={handleChange}
               >
-                <option value="1">Baja</option>
-                <option value="2">Media</option>
-                <option value="3">Alta</option>
+                <option value="1">{t("modal:low")}</option>
+                <option value="2">{t("modal:medium")}</option>
+                <option value="3">{t("modal:high")}</option>
               </select>
             </CInputGroup>
           </div>
@@ -131,10 +156,10 @@ const NewTaskModal = ({ visible, setVisible, board, refreshBoards }) => {
       </CModalBody>
       <CModalFooter className={styles.modal_footer}>
         <CButton color="secondary" onClick={() => setVisible(false)}>
-          Cerrar
+          {t("modal:close")}
         </CButton>
         <CButton color="primary" onClick={handleAddTask}>
-          Guardar
+          {t("modal:save")}
         </CButton>
       </CModalFooter>
     </CModal>

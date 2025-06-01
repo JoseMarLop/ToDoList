@@ -16,8 +16,10 @@ import { addTable, updateTable, deleteTable } from "../../../data/table";
 import CIcon from "@coreui/icons-react";
 import { cilTrash } from "@coreui/icons";
 import styles from "./TableModal.module.scss";
+import { useTranslation } from "react-i18next";
 
 const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
+  const { t } = useTranslation();
   const [error, setError] = useState(null);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
@@ -94,12 +96,12 @@ const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
       >
         <CModalHeader className={styles.modal_header}>
           <CModalTitle>
-            {mode === "add" ? "Añadir tablero" : "Editar tablero"}
+            {mode === "add" ? t("modal:addTable") : t("modal:editTable")}
           </CModalTitle>
         </CModalHeader>
         <CModalBody className={styles.modal_body}>
           <CForm>
-            <span className={styles.modal_text}>Title</span>
+            <span className={styles.modal_text}>{t("modal:title")}</span>
             <CInputGroup className="mb-3">
               <CFormInput
                 name="name"
@@ -108,7 +110,9 @@ const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
                 className={styles.table_input}
               />
             </CInputGroup>
-            <span className={styles.modal_text}>Description</span>
+            <span className={styles.modal_text}>
+              {t("modal:description")}
+            </span>
             <CInputGroup className="mb-3">
               {/* <CInputGroupText>
                 <CIcon icon={cilShortText} />
@@ -130,13 +134,13 @@ const TableModal = ({ visible, setVisible, board, mode, refreshBoards }) => {
         </CModalBody>
         <CModalFooter className={styles.modal_footer}>
           <CButton color="secondary" onClick={() => setVisible(false)}>
-            Close
+            {t("modal:close")}
           </CButton>
           <CButton
             color="primary"
             onClick={mode === "add" ? handleAddTable : handleUpdateTable}
           >
-            Save changes
+            {t("modal:save")}
           </CButton>
           {mode !== "add" && (
             <CButton
@@ -162,21 +166,20 @@ export default TableModal;
 
 //Modal to confirm deletion
 const DeleteConfirmModal = ({ visible, onClose, onConfirm }) => {
+  const { t } = useTranslation();
+
   return (
     <CModal alignment="center" visible={visible} onClose={onClose}>
       <CModalHeader>
-        <CModalTitle>Confirmar eliminación</CModalTitle>
+        <CModalTitle>{t("modal:confirmation")}</CModalTitle>
       </CModalHeader>
-      <CModalBody>
-        ¿Estás seguro de que deseas eliminar este tablero? Esta acción no se
-        puede deshacer.
-      </CModalBody>
+      <CModalBody>{t("modal:deleteTable")}</CModalBody>
       <CModalFooter>
         <CButton color="secondary" onClick={onClose}>
-          Cancelar
+          {t("modal:cancel")}
         </CButton>
         <CButton color="danger" onClick={onConfirm}>
-          Eliminar
+          {t("modal:delete")}
         </CButton>
       </CModalFooter>
     </CModal>

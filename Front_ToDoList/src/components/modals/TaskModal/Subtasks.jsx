@@ -1,11 +1,14 @@
 import { use, useEffect, useState } from "react";
-import { addSubtask,getSubtasks,deleteSubtask } from "../../../data/task";
+import { addSubtask, getSubtasks, deleteSubtask } from "../../../data/task";
 import CIcon from "@coreui/icons-react";
 import { cilCheckAlt, cilList, cilPlus, cilTrash, cilX } from "@coreui/icons";
 import styles from "./TaskModal.module.scss";
 import { CFormInput } from "@coreui/react";
+import { useTranslation } from "react-i18next";
 
 const Subtasks = ({ fullTask }) => {
+  const { t } = useTranslation();
+
   /*
         ################################################################
         ######################### SUBTASKS #############################
@@ -18,21 +21,22 @@ const Subtasks = ({ fullTask }) => {
   const [subtaskData, setSubtaskData] = useState({
     title: "",
   });
-  const [subtasks, setSubtasks] = useState([]); 
-  
+  const [subtasks, setSubtasks] = useState([]);
+  const [error, setError] = useState(null);
+
   const handleSubtasks = async () => {
     try {
-        const result = await getSubtasks(fullTask.id); 
-        if (result.error) {
-            console.log(result.error); 
-        } else {
-            setSubtasks(result); 
-        }
+      const result = await getSubtasks(fullTask.id);
+      if (result.error) {
+        setError(result.error);
+      } else {
+        setSubtasks(result);
+      }
     } catch (error) {
-        console.log("Error al obtener las subtareas");
-        console.error(error);
+      console.log("Error al obtener las subtareas");
+      console.error(error);
     }
-};
+  };
 
   useEffect(() => {
     handleSubtasks();
@@ -50,14 +54,14 @@ const Subtasks = ({ fullTask }) => {
   const handleAddSubtask = async (e) => {
     e.preventDefault();
     if (subtaskData.title.trim() === "") {
-      alert("El título de la subtarea no puede estar vacío.");
+      setError(t("modal:nonEmptyError"));
       return;
     }
     console.log(subtaskData);
 
     const result = await addSubtask(fullTask.id, subtaskData);
     if (result.error) {
-      alert(result.error);
+      setError(result.error);
     } else {
       setSubtaskData({
         title: "",
@@ -68,16 +72,14 @@ const Subtasks = ({ fullTask }) => {
   };
 
   const handleDeleteSubtask = async (subtaskId) => {
-
     const result = deleteSubtask(subtaskId);
 
-    if(result.error){
-        console.log(result.error);
-    }else{
-        // alert("Borrado exitoso");
-        handleSubtasks();
+    if (result.error) {
+      setError(result.error);
+    } else {
+      handleSubtasks();
     }
-  }
+  };
 
   return (
     <>
@@ -85,7 +87,7 @@ const Subtasks = ({ fullTask }) => {
         className={`${styles.description_div} d-flex align-items-center gap-2 mb-3`}
       >
         <CIcon icon={cilList} size="xl" />
-        <span>Subtareas</span>
+        <span>{t("modal:subtasks")}</span>
       </div>
       <div className="mb-3 w-50">
         {subtasks && subtasks.length > 0 ? (
@@ -116,43 +118,45 @@ const Subtasks = ({ fullTask }) => {
           </ul>
         ) : (
           <p style={{ color: "lightgray", fontSize: "14px" }} className="ms-3">
-            No hay subtareas
+            {t("modal:noSubtasks")}
           </p>
         )}
-        <div
-          className="d-flex gap-2 align-items-center"
-          style={{ cursor: "pointer" }}
-          onClick={() => setIsAddingSubtask(true)}
-        >
-          {isAddingSubtask ? (
-            <div className="d-flex flex-row align-items-center gap-2">
-              <CFormInput
-                className={styles.subtask_input}
-                name="title"
-                value={subtaskData.title}
-                onChange={handleSubtaskChange}
-              />
-              <CIcon
-                icon={cilCheckAlt}
-                size="xxl"
-                className="mt-2"
-                onClick={handleAddSubtask}
-              />
-
-              <CIcon
-                icon={cilX}
-                size="xxl"
-                className="mt-2"
-                onClick={() => {}}
-              />
-            </div>
-          ) : (
-            <>
-              <CIcon icon={cilPlus} />
-              <span style={{ color: "lightgray" }}>Añadir subtarea</span>
-            </>
-          )}
-        </div>
+        {isAddingSubtask ? (
+          <div className="d-flex flex-row align-items-center gap-2">
+            <CFormInput
+              className={styles.subtask_input}
+              name="title"
+              value={subtaskData.title}
+              onChange={handleSubtaskChange}
+            />
+            <CIcon
+              icon={cilCheckAlt}
+              size="xxl"
+              className="mt-2"
+              onClick={handleAddSubtask}
+            />
+            <CIcon
+              icon={cilX}
+              size="xxl"
+              className="mt-2"
+              onClick={() => {
+                setIsAddingSubtask(false);
+                setSubtaskData({ title: "" });
+                setError(null);
+              }}
+            />
+          </div>
+        ) : (
+          <div
+            className="d-flex gap-2 align-items-center"
+            style={{ cursor: "pointer" }}
+            onClick={() => setIsAddingSubtask(true)}
+          >
+            <CIcon icon={cilPlus} />
+            <span style={{ color: "lightgray" }}>{t("modal:addSubtask")}</span>
+          </div>
+        )}
+        {error && <div className="text-danger mt-2">{error}</div>}
       </div>
     </>
   );

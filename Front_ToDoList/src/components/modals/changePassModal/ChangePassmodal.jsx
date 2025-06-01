@@ -13,8 +13,10 @@ import {
 import styles from "./ChangePassmodal.module.scss";
 import { useState } from "react";
 import { updatePassword } from "../../../data/auth";
+import { useTranslation } from "react-i18next";
 
 const ChangePassModal = ({ visible, setVisible }) => {
+  const { t } = useTranslation();
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
     password: "",
@@ -39,17 +41,17 @@ const ChangePassModal = ({ visible, setVisible }) => {
       !passwordData.password ||
       !passwordData.repeatPassword
     ) {
-      setError("All fields are required");
+      setError(t("modal:allFieldsError"));
       return;
     }
 
     if (passwordData.password.length < 5) {
-      setError("New password must be at least 5 characters long");
+      setError(t("modal:passwordLengthError"));
       return;
     }
 
     if (passwordData.password !== passwordData.repeatPassword) {
-      setError("Passwords do not match");
+      setError(t("modal:passwordMatchError"));
       return;
     }
 
@@ -57,7 +59,7 @@ const ChangePassModal = ({ visible, setVisible }) => {
     if (response.data.error) {
       setError(response.data.error);
       return;
-    }else{
+    } else {
       alert("Password changed successfully");
       setVisible(false);
       setPasswordData({
@@ -84,7 +86,7 @@ const ChangePassModal = ({ visible, setVisible }) => {
       }}
     >
       <CModalHeader className={styles.modal_header}>
-        <CModalTitle>Change password</CModalTitle>
+        <CModalTitle>{t("modal:changePass")}</CModalTitle>
       </CModalHeader>
       <CModalBody className={styles.modal_body}>
         <CForm>
@@ -95,7 +97,7 @@ const ChangePassModal = ({ visible, setVisible }) => {
               value={passwordData.oldPassword}
               onChange={handleInputChange}
               type="password"
-              placeholder="Old Password"
+              placeholder={t("modal:oldPass")}
               className={styles.task_input}
             />
           </CInputGroup>
@@ -107,7 +109,7 @@ const ChangePassModal = ({ visible, setVisible }) => {
               value={passwordData.password}
               onChange={handleInputChange}
               type="password"
-              placeholder="New Password"
+              placeholder={t("modal:newPass")}
               className={styles.task_input}
             />
           </CInputGroup>
@@ -119,7 +121,7 @@ const ChangePassModal = ({ visible, setVisible }) => {
               value={passwordData.repeatPassword}
               onChange={handleInputChange}
               type="password"
-              placeholder="Repeat Password"
+              placeholder={t("modal:repeatPass")}
               className={styles.task_input}
             />
           </CInputGroup>
@@ -136,7 +138,7 @@ const ChangePassModal = ({ visible, setVisible }) => {
       </CModalBody>
       <CModalFooter className={styles.modal_footer}>
         <CButton color="primary" onClick={handleSave}>
-          Save
+          {t("modal:save")}
         </CButton>
       </CModalFooter>
     </CModal>

@@ -12,8 +12,11 @@ import CIcon from "@coreui/icons-react";
 import { cibSuperuser, cilPlus, cilTrash } from "@coreui/icons";
 import { addMember, deleteMember, updateMember } from "../../../data/member";
 import styles from "./MemberModal.module.scss";
+import {useTranslation} from "react-i18next";
 
 const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
+  const { t } = useTranslation();
+
   const [addingMember, setAddingMember] = useState(false);
   const [memberEmail, setMemberEmail] = useState("");
   const [error, setError] = useState(null);
@@ -26,7 +29,7 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
   const handleAddMember = async (e) => {
     e.preventDefault();
     if (memberEmail.trim() === "") {
-      setError("El correo electrónico no puede estar vacío");
+      setError(t("modal:nonEmptyError"));
       return;
     }
     const result = await addMember(board.id, { email: memberEmail });
@@ -40,7 +43,7 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
     }
   };
 
-  // Maneja la tecla Enter
+  
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleAddMember(e);
@@ -74,16 +77,16 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
       onClose={() => setVisible(false)}
     >
       <CModalHeader className={styles.modal_header}>
-        <CModalTitle>Miembros</CModalTitle>
+        <CModalTitle>{t("modal:members")}</CModalTitle>
       </CModalHeader>
       <CModalBody className={`${styles.modal_body} d-flex flex-row`}>
         {!board ? (
-          <div>Cargando...</div>
+          <div>{t("modal:loading")}</div>
         ) : (
           <>
             <section className="w-50">
               <p>
-                <strong>Propietario:</strong> {board.owner}
+                <strong>{t("modal:owner")}</strong> {board.owner}
               </p>
 
               <div className="d-flex flex-row align-items-center my-2">
@@ -104,7 +107,7 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
                             style={{ cursor: "pointer" }}
                             onClick={() => handleDeleteMember(member.member_id)}
                           >
-                            <span>Expulsar</span>
+                            <span>{t("modal:remove")}</span>
                             <CIcon
                               icon={cilTrash}
                               style={{ color: "red" }}
@@ -133,7 +136,7 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
                     </div>
                   ))
                 ) : (
-                  <span>No hay miembros</span>
+                  <span>{t("modal:noMembers")}</span>
                 )}
               </div>
             </section>
@@ -163,7 +166,7 @@ const MemberModal = ({ visible, setVisible, board, refreshBoards }) => {
                     >
                       <CIcon icon={cilPlus} className={styles.member_text}/>
                       <span className={`${styles.member_text} ms-1`}>
-                        Añadir miembro
+                      {t("modal:addMember")}
                       </span>
                     </div>
                   )}

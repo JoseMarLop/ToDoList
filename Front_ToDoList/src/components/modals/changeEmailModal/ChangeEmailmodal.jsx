@@ -13,8 +13,10 @@ import styles from "./ChangeEmailmodal.module.scss";
 import { useState } from "react";
 import { updateEmail } from "../../../data/auth";
 import { logout } from "../../../data/auth";
+import { useTranslation } from "react-i18next";
 
 const ChangeEmailModal = ({ visible, setVisible }) => {
+  const { t } = useTranslation();
   const [emailData, setEmailData] = useState({
     password: "",
     newEmail: "",
@@ -40,12 +42,12 @@ const ChangeEmailModal = ({ visible, setVisible }) => {
       emailData.newEmail.trim() === "" ||
       emailData.repeatEmail.trim() === ""
     ) {
-      setError("All fields are required");
+      setError(t("modal:allFieldsError"));
       return;
     }
 
     if (emailData.newEmail !== emailData.repeatEmail) {
-      setError("Emails do not match");
+      setError(t("modal:emailMatchError"));
       return;
     }
 
@@ -81,7 +83,7 @@ const ChangeEmailModal = ({ visible, setVisible }) => {
       }}
     >
       <CModalHeader className={styles.modal_header}>
-        <CModalTitle>Change email</CModalTitle>
+        <CModalTitle>{t("modal:changeEmail")}</CModalTitle>
       </CModalHeader>
       <CModalBody className={styles.modal_body}>
         <CForm>
@@ -92,7 +94,7 @@ const ChangeEmailModal = ({ visible, setVisible }) => {
               value={emailData.password}
               onChange={handleInputChange}
               type="password"
-              placeholder="Password"
+              placeholder={t("modal:password")}
               className={styles.task_input}
             />
           </CInputGroup>
@@ -103,7 +105,7 @@ const ChangeEmailModal = ({ visible, setVisible }) => {
               name="newEmail"
               value={emailData.newEmail}
               onChange={handleInputChange}
-              placeholder="New Email"
+              placeholder={t("modal:newEmail")}
               type="email"
               className={styles.task_input}
             />
@@ -115,7 +117,7 @@ const ChangeEmailModal = ({ visible, setVisible }) => {
               name="repeatEmail"
               value={emailData.repeatEmail}
               onChange={handleInputChange}
-              placeholder="Repeat Email"
+              placeholder={t("modal:repeatEmail")}
               type="email"
               className={styles.task_input}
             />
@@ -133,7 +135,7 @@ const ChangeEmailModal = ({ visible, setVisible }) => {
       </CModalBody>
       <CModalFooter className={styles.modal_footer}>
         <CButton color="primary" onClick={handleSave}>
-          Save
+          {t("modal:save")}
         </CButton>
       </CModalFooter>
     </CModal>

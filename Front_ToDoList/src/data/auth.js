@@ -1,5 +1,6 @@
 const API_URL = "http://localhost:8080/api";
 const token = localStorage.getItem("token");
+const locale = localStorage.getItem("language") || "en";
 
 export const login = async (email, password) => {
   try {
@@ -7,6 +8,7 @@ export const login = async (email, password) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Language": locale,
       },
       body: JSON.stringify({ email, password }),
     });
@@ -35,6 +37,7 @@ export const register = async (email, password) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Language": locale,
       },
       body: JSON.stringify({ email, password }),
     });
@@ -56,12 +59,12 @@ export const logout = () => {
 
 export const updatePassword = async (passwordData) => {
   try {
-    
     const response = await fetch(`${API_URL}/changePassword`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        "X-Language": locale,
       },
       body: JSON.stringify(passwordData),
     });
@@ -81,6 +84,7 @@ export const updateEmail = async (emailData) => {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        "X-Language": locale,
       },
       body: JSON.stringify(emailData),
     });
@@ -90,8 +94,6 @@ export const updateEmail = async (emailData) => {
     if (!response.ok) {
       return { error: data.error || "Unknown error" };
     }
-
-    
 
     return { data };
   } catch (error) {

@@ -1,5 +1,6 @@
 const API_URL = "http://localhost:8080/api";
 const token = localStorage.getItem("token");
+const locale = localStorage.getItem("language") || "en";
 
 export const getTask = async (taskId) => {
   try {
@@ -120,14 +121,13 @@ export const deleteSubtask = async (subtaskId) => {
 };
 
 export const changeTaskStatus = async (taskId, status) => {
-  const lang = localStorage.getItem('language') || 'en';
   try {
     const response = await fetch(`${API_URL}/changeTaskStatus/${taskId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        "X-Language": lang
+        "X-Language": locale
       },
       body: JSON.stringify({status}),
     });
@@ -139,14 +139,13 @@ export const changeTaskStatus = async (taskId, status) => {
 };
 
 export const changeAssignee = async (taskId ,email) => {
-  const lang = localStorage.getItem('language') || 'en';
   try {
     const response = await fetch(`${API_URL}/changeAssignee/${taskId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        "X-Language": lang
+        "X-Language": locale
       },
       body: JSON.stringify({email}),
     });

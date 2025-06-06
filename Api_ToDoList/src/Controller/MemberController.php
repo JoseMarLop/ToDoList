@@ -23,7 +23,7 @@ final class MemberController extends AbstractController
     #[Route('/api/addMember/{table_id}', name: 'addMember', methods: ['POST'])]
     public function addMember(Request $request, EntityManagerInterface $entityManager, int $table_id): JsonResponse
     {
-
+        $locale = $request->headers->get('X-Language', 'en');
         $table = $this->tableRepository->findOneBy(['id' => $table_id]);
         if (!$table) {
             return new JsonResponse(['error' => 'Table not found'], Response::HTTP_NOT_FOUND);
@@ -42,7 +42,9 @@ final class MemberController extends AbstractController
         }
 
         if ($user->getEmail() === $table->getOwner()->getEmail()) {
-            return new JsonResponse(['error' => 'The owner cannot be added'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse([
+                'error' => $locale === 'es' ? 'El propietario no puede ser añadido' : 'The owner cannot be added'
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         $existingMember = $entityManager->getRepository(Member::class)->findOneBy([
@@ -51,7 +53,9 @@ final class MemberController extends AbstractController
         ]);
 
         if ($existingMember) {
-            return new JsonResponse(['error' => 'User is already a member of this table'], Response::HTTP_CONFLICT);
+            return new JsonResponse([
+                'error' => $locale === 'es' ? 'El usuario ya es miembro de esta tabla' : 'User is already a member of this table'
+            ], Response::HTTP_CONFLICT);
         }
 
 
@@ -75,26 +79,30 @@ final class MemberController extends AbstractController
 
     //Update rol
     #[Route('/api/updateMember/{table_id}/{user_id}', name: 'updateMember', methods: ['PUT'])]
-    public function updateMember(int $table_id, int $user_id, EntityManagerInterface $entityManager): JsonResponse
+    public function updateMember(int $table_id, int $user_id,Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
+        $locale = $request->headers->get('X-Language', 'en');
+
         $table = $this->tableRepository->findOneBy(['id' => $table_id]);
         if (!$table) {
             return new JsonResponse(['error' => 'Table not found'], Response::HTTP_NOT_FOUND);
         }
 
-     
+
         $user = $this->userRepository->findOneBy(['id' => $user_id]);
         if (!$user) {
             return new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
         }
 
-        
+
         $member = $entityManager->getRepository(Member::class)->findOneBy(['user' => $user, 'board' => $table]);
         if (!$member) {
-            return new JsonResponse(['error' => 'Member not found in this table'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse([
+                'error' => $locale === 'es' ? 'Miembro no encontrado en esta tabla' : 'Member not found in this table'
+            ], Response::HTTP_NOT_FOUND);
         }
 
-        
+
         if ($member->getRol() === 'admin') {
             $member->setRol('member');
         } elseif ($member->getRol() === 'member') {

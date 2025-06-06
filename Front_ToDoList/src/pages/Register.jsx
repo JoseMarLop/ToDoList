@@ -51,8 +51,8 @@ const Register = () => {
     setLoading(true);
     setError(null);
     const response = await register(email, password);
-    if (response.error) {
-      setError(response.error);
+    if (response.data.error) {
+      setError(response.data.error);
     } else {
       navigate("/login");
     }

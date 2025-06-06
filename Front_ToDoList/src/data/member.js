@@ -1,5 +1,6 @@
 const API_URL = "http://localhost:8080/api";
 const token = localStorage.getItem("token");
+const locale = localStorage.getItem("language") || "en";
 
 export const addMember = async (tableId, userEmail) => {
   try {
@@ -8,6 +9,7 @@ export const addMember = async (tableId, userEmail) => {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        "X-Locale": locale,
       },
       body: JSON.stringify(userEmail),
     });
@@ -26,6 +28,7 @@ export const updateMember = async (tableId, userId) => {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        "X-Locale": locale,
       },
     });
     const data = await response.json();

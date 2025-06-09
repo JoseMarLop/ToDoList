@@ -1,0 +1,50 @@
+{
+  "title": "Título",
+  "description": "Descripción",
+  "priority": "Prioridad",
+  "password": "Contraseña",
+  "close": "Cerrar",
+  "save": "Guardar",
+  "confirmation": "Confirmar eliminacion",
+  "deleteTable": "¿Estás seguro de que deseas eliminar este tablero? Esta acción no se puede deshacer.",
+  "delete": "Eliminar",
+  "cancel": "Cancelar",
+  "addTable": "Agregar tablero",
+  "editTable": "Editar tablero",
+
+  "members": "Miembros",
+  "loading": "Cargando...",
+  "owner": "Propietario:",
+  "remove": "Expulsar",
+  "noMembers": "No hay miembros",
+  "addMember": "Añadir miembro",
+
+  "addTask": "Añadir tarea",
+
+  "changePass": "Cambiar contraseña",
+  "changeEmail": "Cambiar email",
+  "oldPass": "Contraseña actual",
+  "newPass": "Nueva contraseña",
+  "repeatPass": "Repetir contraseña",
+  "newEmail": "Nuevo email",
+  "repeatEmail": "Repetir email",
+
+  "noDescription": "No hay descripción",
+  "assign": "Asignar",
+  "assigned": "Asignada a:",
+  "noAssigned": "No asignada",
+
+  "subtasks": "Subtareas",
+  "noSubtasks": "No hay subtareas",
+  "addSubtask": "Añadir subtarea",
+
+  "nonEmptyError": "Este campo no puede estar vacío.",
+  "allFieldsError": "All fields are required.",
+  "passwordLengthError": "La contrseña debe tener al menos 5 caracteres.",
+  "passwordMatchError": "Las contraseñas no coinciden.",
+  "emailMatchError": "El email no coincide.",
+
+  "low": "Baja",
+  "medium": "Media",
+  "high": "Alta"
+}

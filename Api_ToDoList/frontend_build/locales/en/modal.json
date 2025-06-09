@@ -1,0 +1,54 @@
+{
+  "title": "Title",
+  "description": "Description",
+  "priority": "Priority",
+  "password": "Password",
+  "close": "Close",
+  "save": "Save",
+  "confirmation": "Confirm deletion",
+  "deleteTable": "Are you sure you want to delete this board? This action cannot be undone.",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "addTable": "Add table",
+  "editTable": "Edit table",
+
+  "members": "Members",
+  "loading": "Loading...",
+  "owner": "Owner:",
+  "remove": "Remove",
+  "noMembers": "No members",
+  "addMember": "Add member",
+
+  "addTask": "Add task",
+
+  "changePass": "Change password",
+  "changeEmail": "Change email",
+  "oldPass": "Old password",
+  "newPass": "New password",
+  "repeatPass": "Repeat password",
+  "newEmail": "New email",
+  "repeatEmail": "Repeat email",
+
+  "noDescription": "No description",
+  "assign": "Assign",
+  "assigned": "Assigned to:",
+  "noAssigned": "Not assigned",
+
+  "subtasks": "Subtasks",
+  "noSubtasks": "No subtasks",
+  "addSubtask": "Add subtask",
+
+  "comments": "Comments",
+  "writeComment": "Write a comment and press Enter",
+  "deleteComment": "Are you sure you want to delete this comment?",
+
+  "nonEmptyError": "This field cannot be empty.",
+  "allFieldsError": "All fields are required.",
+  "passwordLengthError": "Password must be at least 5 characters long.",
+  "passwordMatchError": "Passwords do not match.",
+  "emailMatchError": "Email does not match",
+
+  "low": "Low",
+  "medium": "Medium",
+  "high": "High"
+}

@@ -1,0 +1,9 @@
+{
+    "members": "Miembros",
+    "addTask": "Añadir tarea",
+    "filterPriority": "Filtrar por prioridad",
+    "lowPriority": "Prioridad baja",
+    "mediumPriority": "Prioridad media",
+    "highPriority": "Prioridad alta",
+    "allTasks": "Todas"
+  }

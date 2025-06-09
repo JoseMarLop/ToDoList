@@ -1,0 +1,13 @@
+{
+    "english": "English",
+    "spanish": "Spanish",
+
+    "dashboard": "Dashboard",
+    "welcome": "Welcome",
+
+    "changepassword": "Change Password",
+    "changeemail": "Change Email",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register"
+}

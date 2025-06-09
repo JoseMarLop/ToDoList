@@ -1,0 +1,13 @@
+{
+    "english": "Inglés",
+    "spanish": "Español",
+
+    "dashboard": "Mis Tableros",
+    "welcome": "Inicio",
+
+    "changepassword": "Cambiar contraseña",
+    "changeemail": "Cambiar email",
+    "logout": "Desconectarse",
+    "login": "Login",
+    "register": "Registro"
+}

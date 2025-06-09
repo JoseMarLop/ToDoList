@@ -1,0 +1,16 @@
+{
+  "tableTitle": "Legal y Soporte",
+  "tableSubtitle": "Términos, ayuda y navegación del sitio",
+
+  "legalSection": "Legal",
+  "legalDescription1": "Términos del servicio",
+  "legalDescription2": "Política de privacidad",
+
+  "helpSection": "Soporte",
+  "helpDescription1": "Centro de ayuda",
+  "helpDescription2": "Contáctanos",
+
+  "navigationSection": "Navegación",
+  "navigationDescription1": "Mis tableros",
+  "navigationDescription2": "Configuración de cuenta"
+}

@@ -1,11 +1,15 @@
 nelmio_cors:
   defaults:
-    origin_regex: true
-    allow_origin: ["%env(CORS_ALLOW_ORIGIN)%"]
-    allow_methods: ["GET", "OPTIONS", "POST", "PUT", "PATCH", "DELETE"]
-    allow_headers: ["Content-Type", "Authorization", "X-Language"]
-    expose_headers: ["Link"]
+    origin_regex: false
+    allow_origin: ['https://todolistgr.work.gd', 'https://www.todolistgr.work.gd']
+    allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
+    allow_headers: ['Content-Type', 'Authorization', 'X-Language']
+    expose_headers: ['Link']
     max_age: 3600
+    allow_credentials: true
   paths:
-    "^/api/":
-      allow_origin: ["*"]
+    '^/api/':
+      allow_origin: ['https://todolistgr.work.gd', 'https://www.todolistgr.work.gd']
+      allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
+      allow_headers: ['Content-Type', 'Authorization', 'X-Language']
+      allow_credentials: true
